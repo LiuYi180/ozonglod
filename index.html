@@ -1,0 +1,2501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ozon 掘金 PRO</title>
+    <style>
+        /* --- 0. 全局定义与变量 --- */
+        :root {
+            --bg-color: #FAFAFA;
+            --text-main: #111111;
+            --text-sub: #666666;
+            --brand-purple: #6D28D9;
+            --brand-accent: #8B5CF6;
+            --brand-gradient: linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%);
+            --border-light: rgba(0, 0, 0, 0.08);
+            --shadow-float: 0 20px 40px -10px rgba(109, 40, 217, 0.15);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            line-height: 1.5;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 32px 32px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3 { letter-spacing: -0.03em; font-weight: 800; }
+        a { text-decoration: none; color: inherit; }
+
+        /* --- 1. 动画关键帧 --- */
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes rotateFloat {
+            0% { transform: rotateX(60deg) rotateZ(0deg) translateZ(0px); }
+            50% { transform: rotateX(60deg) rotateZ(180deg) translateZ(20px); }
+            100% { transform: rotateX(60deg) rotateZ(360deg) translateZ(0px); }
+        }
+
+        @keyframes growBar {
+            from { height: 0%; }
+            to { height: var(--h); }
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .reveal { opacity: 0; animation: revealUp 1s var(--ease-out-expo) forwards; }
+        .d-1 { animation-delay: 0.1s; }
+        .d-2 { animation-delay: 0.2s; }
+        .d-3 { animation-delay: 0.3s; }
+
+        /* --- 2. 导航栏 --- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(250, 250, 250, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 999;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 1.2rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            position: relative;
+        }
+
+        .nav-menu a {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--brand-purple);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--brand-gradient);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-menu a.active {
+            color: var(--brand-purple);
+        }
+
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+
+        /* 移动端汉堡菜单按钮 */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-main);
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-actions { display: flex; align-items: center; }
+
+        .btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-ghost { color: var(--text-sub); margin-right: 1rem; }
+        .btn-solid {
+            background: var(--text-main); color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* --- 3. Hero Section --- */
+        .hero {
+            min-height: 90vh; /* Mobile Default */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 8rem 5% 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            perspective: 1000px;
+            gap: 2rem;
+        }
+
+        .hero-text h1 {
+            /* 响应式字体大小 clamp(最小值, 视口偏好, 最大值) */
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text h1 span {
+            color: var(--brand-purple);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-desc {
+            font-size: clamp(1rem, 1.2vw, 1.2rem);
+            color: var(--text-sub);
+            max-width: 500px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* 3D Visual Container */
+        .hero-visual {
+            position: relative;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Isometric Stack */
+        .isometric-stack {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateZ(45deg);
+            animation: rotateFloat 12s linear infinite;
+        }
+
+        .iso-layer {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(109, 40, 217, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var(--brand-purple);
+            font-size: 1.5rem;
+        }
+
+        .layer-1 { transform: translateZ(0px); background: rgba(109, 40, 217, 0.05); }
+        .layer-2 { transform: translateZ(40px); background: rgba(109, 40, 217, 0.1); width: 80%; height: 80%; left: 10%; top: 10%; }
+        .layer-3 { transform: translateZ(80px); background: var(--brand-gradient); color: white; width: 60%; height: 60%; left: 20%; top: 20%; box-shadow: 0 10px 30px rgba(109, 40, 217, 0.4); }
+
+        /* --- 4. Ticker --- */
+        .ticker-wrap {
+            background: var(--text-main);
+            color: white;
+            padding: 1rem 0;
+            overflow: hidden;
+            transform: rotate(-1deg);
+            margin: 2rem 0;
+        }
+        .ticker-content { display: flex; white-space: nowrap; animation: ticker 20s linear infinite; }
+        .ticker-item { font-size: 1.2rem; font-weight: 700; padding: 0 1.5rem; text-transform: uppercase; display: flex; align-items: center; }
+        .ticker-item::before { content: '✦'; color: var(--brand-accent); margin-right: 0.8rem; }
+
+        /* --- 5. Feature Section (Device Mockups) --- */
+        .feature-section {
+            padding: 4rem 5%;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-tag {
+            background: #F3E8FF; color: var(--brand-purple);
+            padding: 5px 15px; border-radius: 20px;
+            font-weight: 700; font-size: 0.8rem;
+            text-transform: uppercase; margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        /* 样机舞台容器 - 核心缩放逻辑 */
+        .device-stage-wrapper {
+            width: 100%;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: visible;
+            position: relative;
+        }
+
+        /* 实际样机组，固定宽度，通过 transform scale 适配 */
+        .device-group {
+            position: relative;
+            width: 900px; /* 固定绘图基准宽度 */
+            height: 500px;
+            transform-origin: center center;
+            /* 默认缩放，根据JS或媒体查询调整 */
+        }
+        
+        /* 等比缩放系统：样机容器根据视口自适应 */
+        @media (max-width: 1024px) {
+            .device-stage-wrapper {
+                height: 500px;
+            }
+            .iphone {
+                transform: rotate(-5deg) scale(0.65);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* 移动端隐藏平板和手机样机 */
+            .device-stage-wrapper {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* 移动端隐藏平板和手机样机 */
+            .device-stage-wrapper {
+                display: none;
+            }
+        }
+
+        /* Laptop Drawing */
+        .laptop {
+            width: 800px; height: 500px;
+            background: #e2e8f0; border-radius: 24px;
+            padding: 12px; margin: 0 auto;
+            position: absolute; left: 50px; top: 0;
+            transform: rotateX(10deg);
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .laptop-screen {
+            background: #0f172a; width: 100%; height: 100%;
+            border-radius: 16px; overflow: hidden; display: flex;
+        }
+
+        .ui-sidebar { 
+            width: 70px; 
+            background: #1e293b; 
+            height: 100%; 
+            border-right: 1px solid #334155; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 20px; 
+            gap: 20px;
+        }
+        .sidebar-icon { 
+            width: 40px; 
+            height: 40px; 
+            background: #334155; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #94a3b8; 
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        .sidebar-icon.active { 
+            background: #667eea; 
+            color: white; 
+        }
+        .ui-main { 
+            flex: 1; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden;
+        }
+        .ui-header {
+            background: #1e293b;
+            padding: 15px 25px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ui-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .ui-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .ui-search {
+            width: 280px;
+            height: 36px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 0 15px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        .ui-header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .ui-notification {
+            width: 36px;
+            height: 36px;
+            background: #334155;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            position: relative;
+        }
+        .ui-notification::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            border: 2px solid #1e293b;
+        }
+        .ui-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .ui-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .ui-card-row { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 20px; 
+        }
+        .ui-card { 
+            background: #1e293b; 
+            border-radius: 12px; 
+            padding: 20px; 
+            border: 1px solid #334155;
+            position: relative; 
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: cardFloat 8s infinite;
+        }
+        .ui-card:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .ui-card:nth-child(2) {
+            animation-delay: 2s;
+        }
+        .ui-card:nth-child(3) {
+            animation-delay: 4s;
+        }
+        .ui-card:nth-child(4) {
+            animation-delay: 6s;
+        }
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0);
+                border-color: #334155;
+                box-shadow: 0 0 0 rgba(102, 126, 234, 0);
+            }
+            5% {
+                transform: translateY(-8px) scale(1.02);
+                border-color: #667eea;
+                box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+            }
+            20% {
+                transform: translateY(-8px) scale(1.02);
+                border-color: #667eea;
+                box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+            }
+            25% {
+                transform: translateY(0);
+                border-color: #334155;
+                box-shadow: 0 0 0 rgba(102, 126, 234, 0);
+            }
+        }
+        .ui-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            animation-play-state: paused;
+        }
+        .ui-card-title {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ui-card-value {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.2;
+            animation: numberPulse 2s ease-in-out infinite;
+            display: inline-block;
+        }
+        .ui-card:nth-child(1) .ui-card-value {
+            animation-delay: 0s;
+        }
+        .ui-card:nth-child(2) .ui-card-value {
+            animation-delay: 0.5s;
+        }
+        .ui-card:nth-child(3) .ui-card-value {
+            animation-delay: 1s;
+        }
+        .ui-card:nth-child(4) .ui-card-value {
+            animation-delay: 1.5s;
+        }
+        @keyframes numberPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.95;
+            }
+        }
+        .ui-card-change {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .ui-card-change.positive {
+            color: #10b981;
+        }
+        .ui-card-change.negative {
+            color: #ef4444;
+        }
+        .ui-chart-area {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .ui-chart-main {
+            display: flex;
+            flex-direction: column;
+        }
+        .ui-chart-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .chart-bars {
+            display: flex; 
+            align-items: flex-end; 
+            gap: 8px; 
+            height: 180px;
+            padding: 10px 0;
+        }
+        .bar { 
+            flex: 1; 
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); 
+            border-radius: 4px 4px 0 0; 
+            animation: growBar 1s var(--ease-out-expo) forwards; 
+            height: 0;
+            min-height: 20px;
+            position: relative;
+        }
+        .bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px 4px 0 0;
+        }
+        .ui-chart-side {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .ui-mini-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .ui-mini-card-title {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+        .ui-mini-card-value {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        @keyframes growBar {
+            to { height: var(--h, 60%); }
+        }
+
+        /* iPhone Drawing - 375*812 等比缩放 */
+        .iphone {
+            width: 375px; 
+            height: 812px; /* iPhone X 标准尺寸比例 375:812 */
+            background: #111; 
+            border-radius: 40px;
+            position: absolute; 
+            bottom: -30px; 
+            right: 20px;
+            border: 8px solid #333;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            z-index: 20;
+            transform: rotate(-5deg) scale(0.45); /* 等比缩放45%以适应容器 */
+            transform-origin: center bottom;
+            overflow: hidden;
+        }
+
+        .iphone-screen { 
+            background: #f5f7fa; 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 22px; 
+            overflow: hidden; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* 小程序样机内容容器 - 等比缩放 */
+        .phone-content-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            /* 内部UI根据样机尺寸等比缩放 */
+            transform-origin: top left;
+            background: #f5f7fa;
+        }
+        
+        /* 隐藏滚动条但保持滚动功能 */
+        .phone-content-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .phone-content-wrapper {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* 手机状态栏 */
+        .phone-status-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 600;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .phone-status-bar .status-time {
+            font-weight: 600;
+        }
+        
+        .phone-status-bar .status-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .status-signal {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+        
+        .signal-bar {
+            width: 3px;
+            height: 4px;
+            background: white;
+            border-radius: 1px;
+            opacity: 0.9;
+        }
+        
+        .signal-bar:nth-child(1) { height: 3px; }
+        .signal-bar:nth-child(2) { height: 4px; }
+        .signal-bar:nth-child(3) { height: 5px; }
+        .signal-bar:nth-child(4) { height: 6px; }
+        
+        .status-battery {
+            width: 18px;
+            height: 8px;
+            border: 1px solid white;
+            border-radius: 2px;
+            position: relative;
+            opacity: 0.9;
+        }
+        
+        .status-battery::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 2px;
+            width: 2px;
+            height: 4px;
+            background: white;
+            border-radius: 0 1px 1px 0;
+        }
+        
+        .status-battery-fill {
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            width: 85%;
+            height: calc(100% - 2px);
+            background: white;
+            border-radius: 1px;
+        }
+
+        /* 小程序样机内的顶部 Tab 导航 */
+        .phone-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 6px 8px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .phone-tab {
+            flex: 1;
+            padding: 6px 8px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .phone-tab.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* 小程序首页UI样式 */
+        .mini-app-container {
+            width: 100%;
+            min-height: 100%;
+            background: #f5f7fa;
+        }
+        
+        /* 小程序首页头部 */
+        .mini-app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 10px;
+            padding-top: 8px;
+        }
+        
+        .mini-app-user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .mini-app-avatar {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .mini-app-user-details h3 {
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            line-height: 1.2;
+        }
+        
+        .mini-app-user-level {
+            font-size: 9px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        
+        .mini-app-level-badge {
+            background: #ffd700;
+            color: #333;
+            padding: 1px 4px;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+        
+        .mini-app-header-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+        
+        .mini-app-stat {
+            text-align: center;
+        }
+        
+        .mini-app-stat-value {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        
+        .mini-app-stat-label {
+            font-size: 8px;
+            opacity: 0.9;
+        }
+        
+        /* 小程序内容区 */
+        .mini-app-content {
+            padding: 8px;
+            padding-bottom: 20px;
+        }
+        
+        /* 快速操作 */
+        .mini-app-quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .mini-app-quick-action {
+            background: white;
+            padding: 8px 4px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        
+        .mini-app-action-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin: 0 auto 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .mini-app-action-icon.blue { background: #e3f2fd; color: #2196f3; }
+        .mini-app-action-icon.green { background: #e8f5e8; color: #4caf50; }
+        .mini-app-action-icon.orange { background: #fff3e0; color: #ff9800; }
+        .mini-app-action-icon.purple { background: #f3e5f5; color: #9c27b0; }
+        
+        .mini-app-action-label {
+            font-size: 9px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 数据卡片 */
+        .mini-app-card {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+        }
+        
+        .mini-app-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .mini-app-card-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .mini-app-card-subtitle {
+            font-size: 9px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        /* 任务列表 */
+        .mini-app-task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .mini-app-task-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid;
+        }
+        
+        .mini-app-task-item.urgent { border-left-color: #e74c3c; }
+        .mini-app-task-item.normal { border-left-color: #3498db; }
+        .mini-app-task-item.completed { border-left-color: #27ae60; }
+        
+        .mini-app-task-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+        
+        .mini-app-task-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .mini-app-task-title {
+            font-size: 10px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        
+        .mini-app-task-desc {
+            font-size: 8px;
+            color: #666;
+        }
+        
+        .mini-app-task-time {
+            font-size: 7px;
+            color: #999;
+            margin-top: 2px;
+        }
+        
+        .mini-app-task-status {
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        .mini-app-status-urgent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .mini-app-status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .mini-app-status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        /* 任务页面UI样式 */
+        .mini-app-task-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 10px;
+            padding-top: 8px;
+            text-align: center;
+        }
+        
+        .mini-app-task-header-title {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .mini-app-task-header-subtitle {
+            font-size: 9px;
+            opacity: 0.9;
+        }
+        
+        .mini-app-task-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .mini-app-task-stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        
+        .mini-app-task-stat-number {
+            font-size: 14px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 2px;
+        }
+        
+        .mini-app-task-stat-label {
+            font-size: 8px;
+            color: #666;
+        }
+        
+        .mini-app-task-filters {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        
+        .mini-app-filter-btn {
+            flex: 1;
+            padding: 6px;
+            text-align: center;
+            background: white;
+            border: none;
+            font-size: 9px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .mini-app-filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .mini-app-task-card {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border-left: 3px solid;
+        }
+        
+        .mini-app-task-card.in-progress { border-left-color: #2196f3; }
+        .mini-app-task-card.completed { border-left-color: #4caf50; }
+        .mini-app-task-card.pending { border-left-color: #ff9800; }
+        
+        .mini-app-task-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .mini-app-task-card-title {
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+        
+        .mini-app-task-priority {
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 8px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+        
+        .mini-app-priority-high {
+            background: #ffebee;
+            color: #f44336;
+        }
+        
+        .mini-app-priority-medium {
+            background: #fff3e0;
+            color: #ff9800;
+        }
+        
+        .mini-app-priority-low {
+            background: #e8f5e8;
+            color: #4caf50;
+        }
+        
+        .mini-app-task-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 8px;
+            color: #666;
+        }
+        
+        .mini-app-task-card-description {
+            font-size: 9px;
+            color: #666;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+        
+        .mini-app-task-progress {
+            margin-bottom: 8px;
+        }
+        
+        .mini-app-progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .mini-app-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .mini-app-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+        
+        .mini-app-task-actions {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .mini-app-action-btn {
+            flex: 1;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 12px;
+            font-size: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .mini-app-btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .mini-app-btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .mini-app-btn-success {
+            background: #4caf50;
+            color: white;
+        }
+        
+        /* 确保样机内容可以滚动 */
+        .phone-content-wrapper {
+            scroll-behavior: smooth;
+        }
+        
+        /* 响应式调整：确保在小屏幕上UI仍然清晰 */
+        @media (max-width: 768px) {
+            .iphone {
+                width: 180px;
+                height: 360px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .iphone {
+                width: 160px;
+                height: 320px;
+            }
+        }
+
+        .phone-tab {
+            flex: 1;
+            border-radius: 999px;
+            border: 1px solid #e5e7eb;
+            background: #f9fafb;
+            font-size: 0.7rem;
+            padding: 4px 6px;
+            text-align: center;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.25s var(--ease-out-expo);
+        }
+
+        .phone-tab.active {
+            background: #111827;
+            color: #fff;
+            border-color: #111827;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.3);
+        }
+
+        .phone-header {
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .phone-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .phone-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 0.65rem;
+        }
+
+        /* --- 6. Bento Grid (Responsive) --- */
+        .grid-section {
+            max-width: 1200px; margin: 0 auto; padding: 4rem 5%;
+            display: grid;
+            gap: 20px;
+            /* 默认 Desktop: 3 cols */
+            grid-template-columns: repeat(3, 1fr); 
+            grid-template-rows: 300px 300px;
+        }
+
+        .bento-card {
+            background: white; border: 1px solid var(--border-light);
+            border-radius: 24px; padding: 2rem;
+            display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; overflow: hidden; transition: 0.3s;
+        }
+        
+        .bento-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-float); }
+        .large-card { grid-column: span 2; background: var(--text-main); color: white; }
+        .tall-card { grid-row: span 2; background: linear-gradient(180deg, #F3E8FF 0%, #FFFFFF 100%); }
+
+        .bento-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .bento-text { font-size: 0.95rem; opacity: 0.8; }
+        .deco-circle {
+            position: absolute; width: 150px; height: 150px; border-radius: 50%;
+            background: var(--brand-purple); filter: blur(60px); opacity: 0.2; top: -20px; right: -20px;
+        }
+
+        /* --- 7. Architecture Section --- */
+        .section {
+            padding: 5rem 5%;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .section-header p {
+            font-size: clamp(1rem, 1.2vw, 1.1rem);
+            color: var(--text-sub);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .arch-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s var(--ease-out-expo);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--brand-gradient);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+
+        .arch-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-float);
+            border-color: rgba(109, 40, 217, 0.2);
+        }
+
+        .arch-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .arch-card .icon-box {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(109, 40, 217, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--brand-purple);
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .arch-card:hover .icon-box {
+            background: var(--brand-gradient);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .arch-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .arch-card p {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+
+        /* --- 7.5. Value Metrics Section (Dark Background) --- */
+        .bg-dark {
+            background: #0f172a;
+            color: white;
+        }
+
+        .bg-dark p {
+            color: #94a3b8;
+        }
+
+        .bg-dark .section-header h2 {
+            color: white;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .metric-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .chart-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--brand-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-unit {
+            font-size: 1rem;
+            color: #94a3b8;
+        }
+
+        .metric-label {
+            color: #94a3b8;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* SVG Circle Chart */
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 8;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: var(--brand-accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            stroke-dasharray: 251;
+            stroke-dashoffset: 251;
+            transition: stroke-dashoffset 1.5s var(--ease-out-expo);
+        }
+
+        /* --- 8. Footer --- */
+        .cta-section { text-align: center; padding: 6rem 1rem; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); }
+        .cta-title { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 2rem; }
+        
+        footer {
+            border-top: 1px solid var(--border-light);
+            padding: 3rem 5%;
+            display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+            color: var(--text-sub); font-size: 0.9rem;
+        }
+
+        /* =========================================
+           📱 响应式断点 (Media Queries) 
+           ========================================= */
+
+        /* 1. Tablet Landscape & Small Laptops (Max 1024px) */
+        @media (max-width: 1024px) {
+            /* 导航菜单间距调整 */
+            .nav-menu {
+                gap: 1.5rem;
+            }
+
+            .nav-menu a {
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                grid-template-columns: 1fr; /* 变为单列 */
+                text-align: center;
+                gap: 4rem;
+                padding-top: 7rem;
+            }
+
+            .hero-text {
+                display: flex; flex-direction: column; align-items: center;
+            }
+
+            /* 调整 Bento Grid 为 2 列 */
+            .grid-section {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto;
+            }
+            .large-card { grid-column: span 2; height: 300px;}
+            .tall-card { grid-row: auto; grid-column: span 1; height: 350px; }
+            
+            /* 架构部分调整为 2 列 */
+            .grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            /* 样机整体缩放适应平板 - 由JS动态控制，这里不设置固定值 */
+        }
+
+        /* 2. Tablet Portrait & Large Phones (Max 768px) */
+        @media (max-width: 768px) {
+            /* 导航菜单移动端样式 */
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(250, 250, 250, 0.98);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 2rem 5%;
+                gap: 0;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s var(--ease-out-expo);
+                z-index: 998;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .nav-menu li {
+                width: 100%;
+                border-bottom: 1px solid var(--border-light);
+            }
+
+            .nav-menu li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-menu a {
+                display: block;
+                padding: 1rem 0;
+                font-size: 1rem;
+            }
+
+            .nav-menu a::after {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .brand span {
+                display: none;
+            }
+            
+            .hero-visual { height: 350px; }
+            .isometric-stack { width: 220px; height: 220px; }
+            
+            /* 样机容器高度调整 */
+            .device-stage-wrapper { height: 400px; }
+            
+            /* 移动端：iPhone 样机保持正常比例，由JS控制缩放 */
+            .iphone { 
+                transform: rotate(0deg);
+                right: 10px; 
+                bottom: 20px; 
+            }
+            
+            /* Bento Grid 变为单列 */
+            .grid-section { grid-template-columns: 1fr; }
+            .large-card, .tall-card { grid-column: span 1; height: auto; min-height: 280px; }
+            
+            /* 架构部分变为单列 */
+            .grid-3 {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .section {
+                padding: 3rem 5%;
+            }
+            
+            footer { flex-direction: column; text-align: center; align-items: center; }
+        }
+
+        /* 3. Small Mobile (Max 480px) */
+        @media (max-width: 480px) {
+            .hero { padding: 6rem 5% 2rem; }
+            .hero-text h1 { font-size: 2.5rem; }
+            
+            .device-stage-wrapper { height: 350px; }
+            /* 缩放由JS动态控制 */
+            
+            .cta-section { padding: 4rem 1rem; }
+            .btn { width: 100%; justify-content: center; } /* 按钮全宽 */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 导航 -->
+    <nav class="reveal">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <img src="logogold.svg" alt="Ozon Gold Logo">
+                </div>
+                <span>Ozon 掘金 PRO</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="product.html">产品及服务</a></li>
+                <li><a href="platform.html">平台服务</a></li>
+                <li><a href="cooperation.html">商务合作</a></li>
+                <li><a href="about.html">关于我们</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" aria-label="菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <header class="hero">
+        <div class="hero-text">
+            <div class="section-tag reveal d-1">Beta 2.0 Now Live</div>
+            <h1 class="reveal d-2">
+                Ozon 掘金 PRO
+            </h1>
+            <p class="hero-desc reveal d-3" style="font-size: clamp(1rem, 1.2vw, 1.2rem); line-height: 1.8;">
+                基于 Ozon 运营实践沉淀的实操支持系统<br><br>
+                来源于长期 Ozon 运营实践<br>
+                将已验证的流程经验与工具进行系统化整理<br>
+                为新手提供更清晰、规范的起步支持
+            </p>
+            <div class="reveal d-4" style="width: 100%; max-width: 400px;">
+                <a href="#value-section" class="btn btn-solid" style="padding: 1rem 2rem; font-size: 1.1rem; display: inline-flex; justify-content: center; width: 100%;">了解我们的实操方法与支持方式</a>
+            </div>
+        </div>
+
+        <!-- 纯 CSS 3D 建模动画 -->
+        <div class="hero-visual reveal d-3">
+            <div class="isometric-stack">
+                <div class="iso-layer layer-1">DATA</div>
+                <div class="iso-layer layer-2">LOGIC</div>
+                <div class="iso-layer layer-3">OZON AGENT</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 滚动条 -->
+    <div class="ticker-wrap">
+        <div class="ticker-content">
+            <div class="ticker-item">Ozon Growth Engine</div>
+            <div class="ticker-item">Profit Maximization</div>
+            <div class="ticker-item">Smart Pricing</div>
+            <div class="ticker-item">Inventory Prediction</div>
+            <div class="ticker-item">Ozon Growth Engine</div>
+            <div class="ticker-item">Profit Maximization</div>
+        </div>
+    </div>
+
+<!-- Section 2: Architecture -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <h2>来自实践经验沉淀的支持能力</h2>
+                <p>所有工具与流程，均整理自长期实际运营过程<br>侧重规范执行与经验复用<br>用于辅助用户更有序地开展运营工作</p>
+            </div>
+            
+            <div class="grid-3">
+                <div class="arch-card fade-up" style="transition-delay: 0.1s;">
+                    <div class="icon-box">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </div>
+                    <h3>决策中枢 · 看全局</h3>
+                    <p>所有工具与流程，均整理自长期实际运营过程。侧重规范执行与经验复用，用于辅助用户更有序地开展运营工作。</p>
+                </div>
+                <div class="arch-card fade-up" style="transition-delay: 0.2s;">
+                    <div class="icon-box">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12" y2="18"></line></svg>
+                    </div>
+                    <h3>执行端 · 落动作</h3>
+                    <p>所有工具与流程，均整理自长期实际运营过程。侧重规范执行与经验复用，用于辅助用户更有序地开展运营工作。</p>
+                </div>
+                <div class="arch-card fade-up" style="transition-delay: 0.3s;">
+                    <div class="icon-box">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
+                    </div>
+                    <h3>模型层 · 学经验</h3>
+                    <p>所有工具与流程，均整理自长期实际运营过程。侧重规范执行与经验复用，用于辅助用户更有序地开展运营工作。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Section 2: Core Value (Data Driven) -->
+    <!-- 核心功能与样机展示 -->
+    <section class="feature-section">
+        <div class="section-header">
+            <span class="section-tag">System Thinking</span>
+            <h2>把店铺当成“系统”来运营</h2>
+            <p style="color: var(--text-sub); margin-top: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">我们关注的不是某一个爆款技巧，而是从数据、决策到执行的整套方法论。</p>
+        </div>
+
+        <!-- 响应式样机舞台 -->
+        <div class="device-stage-wrapper">
+            <!-- 这是一个固定尺寸的组，通过 CSS transform 整体缩放 -->
+            <div class="device-group">
+                <!-- Laptop -->
+                <div class="laptop">
+                    <div class="laptop-screen">
+                        <div class="ui-sidebar">
+                            <div class="sidebar-icon active">📊</div>
+                            <div class="sidebar-icon">📦</div>
+                            <div class="sidebar-icon">📈</div>
+                            <div class="sidebar-icon">💰</div>
+                            <div class="sidebar-icon">⚙️</div>
+                        </div>
+                        <div class="ui-main">
+                            <div class="ui-header">
+                                <div class="ui-header-left">
+                                    <div class="ui-logo">OZ</div>
+                                    <input type="text" class="ui-search" placeholder="搜索商品、订单、店铺..." />
+                                </div>
+                                <div class="ui-header-right">
+                                    <div class="ui-notification">🔔</div>
+                                    <div class="ui-avatar">李</div>
+                                </div>
+                            </div>
+                            <div class="ui-content">
+                                <div class="ui-card-row">
+                                    <div class="ui-card">
+                                        <div class="ui-card-title">今日GMV</div>
+                                        <div class="ui-card-value">₽ 124,590</div>
+                                        <div class="ui-card-change positive">
+                                            <span>↑</span>
+                                            <span>+12.5%</span>
+                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
+                                        </div>
+                                    </div>
+                                    <div class="ui-card">
+                                        <div class="ui-card-title">订单数量</div>
+                                        <div class="ui-card-value">1,247</div>
+                                        <div class="ui-card-change positive">
+                                            <span>↑</span>
+                                            <span>+8.3%</span>
+                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
+                                        </div>
+                                    </div>
+                                    <div class="ui-card">
+                                        <div class="ui-card-title">净利润</div>
+                                        <div class="ui-card-value">₽ 28,920</div>
+                                        <div class="ui-card-change positive">
+                                            <span>↑</span>
+                                            <span>+15.2%</span>
+                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
+                                        </div>
+                                    </div>
+                                    <div class="ui-card">
+                                        <div class="ui-card-title">转化率</div>
+                                        <div class="ui-card-value">3.24%</div>
+                                        <div class="ui-card-change negative">
+                                            <span>↓</span>
+                                            <span>-0.8%</span>
+                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-chart-area">
+                                    <div class="ui-chart-main">
+                                        <div class="ui-chart-title">7日销售趋势</div>
+                                        <div class="chart-bars">
+                                            <div class="bar" style="--h: 45%; animation-delay: 0s;"></div>
+                                            <div class="bar" style="--h: 68%; animation-delay: 0.1s;"></div>
+                                            <div class="bar" style="--h: 52%; animation-delay: 0.2s;"></div>
+                                            <div class="bar" style="--h: 85%; animation-delay: 0.3s;"></div>
+                                            <div class="bar" style="--h: 72%; animation-delay: 0.4s;"></div>
+                                            <div class="bar" style="--h: 90%; animation-delay: 0.5s;"></div>
+                                            <div class="bar" style="--h: 78%; animation-delay: 0.6s;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-chart-side">
+                                        <div class="ui-mini-card">
+                                            <div class="ui-mini-card-title">活跃店铺</div>
+                                            <div class="ui-mini-card-value">5</div>
+                                        </div>
+                                        <div class="ui-mini-card">
+                                            <div class="ui-mini-card-title">在售SKU</div>
+                                            <div class="ui-mini-card-value">1,247</div>
+                                        </div>
+                                        <div class="ui-mini-card">
+                                            <div class="ui-mini-card-title">库存预警</div>
+                                            <div class="ui-mini-card-value" style="color: #f59e0b;">12</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- iPhone -->
+                <div class="iphone">
+                    <div class="iphone-screen">
+                        <div class="phone-status-bar" id="phone-status-bar">
+                            <!-- 状态栏内容由JS动态渲染 -->
+                        </div>
+                        <div class="phone-content-wrapper" id="phone-content">
+                            <!-- 小程序UI内容将通过JS动态渲染 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Section 3: Core Value (Data Driven) -->
+    <section class="section bg-dark" id="value-section">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <h2>用系统降低不确定性</h2>
+                <p>每一个决策，都有数据与模型支撑</p>
+            </div>
+            
+            <!-- JS Will Inject Data Here -->
+            <div class="grid-3" id="metrics-container">
+                <!-- Data cards generated by script below -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 价值网格 (Bento Grid) -->
+    <section class="grid-section">
+        <div class="bento-card large-card">
+            <div class="deco-circle"></div>
+            <div>
+                <h3 class="bento-title">深度选品模型</h3>
+                <p class="bento-text">基于平台全站数据和历史成交，帮助你从“感觉像是好产品”升级为“有数据支撑的好产品”。</p>
+            </div>
+            <div style="margin-top: 2rem; color: var(--brand-accent); font-weight: 600; cursor: pointer;">
+                👉 查看选品思路
+            </div>
+        </div>
+        <div class="bento-card tall-card">
+            <h3 class="bento-title">智能定价逻辑</h3>
+            <p class="bento-text">不再死盯竞对价格，而是综合利润空间、库存压力与广告节奏，给出“可解释”的定价建议。</p>
+            <div style="font-size: 4rem; text-align: center; margin-top: auto; filter: grayscale(1); opacity: 0.5;">🤖</div>
+        </div>
+        <div class="bento-card">
+            <h3 class="bento-title">可视化经营仪表盘</h3>
+            <p class="bento-text">把 GMV、毛利、广告、库存这些“散点”拉到同一张图上，用一眼就懂的方式告诉你：钱到底赚在哪。</p>
+        </div>
+        <div class="bento-card">
+            <h3 class="bento-title">复盘与策略库</h3>
+            <p class="bento-text">每一次大促、每一次调价，都能形成结构化的复盘记录，下一次复制策略而不是重新摸索。</p>
+        </div>
+    </section>
+
+    <!-- 底部行动呼吁 -->
+    <section class="cta-section">
+        <h2 class="cta-title">了解我们的实操方法与支持方式</h2>
+        <div style="max-width: 400px; margin: 0 auto;">
+            <a href="#value-section" class="btn btn-solid" style="padding: 1.2rem 2rem; font-size: 1.1rem; background: var(--brand-purple); width: 100%; display: block;">了解我们的实操方法与支持方式</a>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div>© 2025 Ozon 掘金 PRO. All rights reserved.</div>
+        <div style="display: flex; gap: 20px;">
+            <a href="#">隐私协议</a>
+            <a href="#">服务条款</a>
+            <a href="#">联系我们</a>
+        </div>
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-light); width: 100%; text-align: center; font-size: 0.85rem; color: var(--text-sub); line-height: 1.6;">
+            本网站内容用于介绍产品功能与支持方式<br>
+            不构成运营成果或收益承诺<br>
+            用户需根据自身情况独立判断与决策
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单切换
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (mobileMenuToggle && navMenu) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenuToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            // 点击菜单项后关闭移动端菜单
+            navMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenuToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+
+            // 点击外部区域关闭菜单
+            document.addEventListener('click', (e) => {
+                if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    mobileMenuToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
+        }
+
+        // 1. Mock Data for Metrics
+        const mockData = {
+            "valueMetrics": [
+                { "label": "试错成本降低", "value": 37, "unit": "%" },
+                { "label": "运营效率提升", "value": 42, "unit": "%" },
+                { "label": "关键决策响应速度", "value": 2.3, "unit": "x" }
+            ]
+        };
+
+        // 2. Render Metrics with SVG Charts
+        const metricsContainer = document.getElementById('metrics-container');
+        
+        if (metricsContainer) {
+            mockData.valueMetrics.forEach((item, index) => {
+                // Calculate circle dashoffset (251 is circumference of r=40)
+                // If value is multiplier (2.3x), treat differently or just fill full for visual
+                let percent = item.unit === '%' ? item.value : (item.value * 10); 
+                if(percent > 100) percent = 100;
+                const offset = 251 - (251 * percent / 100);
+
+                const html = `
+                    <div class="metric-card fade-up" style="transition-delay: ${index * 0.2}s">
+                        <div class="chart-container">
+                            <svg width="120" height="120" viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+                                <circle class="circle-progress" cx="50" cy="50" r="40" 
+                                    style="stroke-dashoffset: 251" 
+                                    data-offset="${offset}"></circle>
+                            </svg>
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold; color: white; font-size: 2rem;">
+                               ${item.unit === 'x' ? '⚡' : '📉'}
+                            </div>
+                        </div>
+                        <div class="metric-value">${item.value}<span style="font-size:1.5rem">${item.unit}</span></div>
+                        <div class="metric-label">${item.label}</div>
+                    </div>
+                `;
+                metricsContainer.innerHTML += html;
+            });
+        }
+
+        // 3. Fade-up 动画触发
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Trigger Chart Animation if it's a metric card
+                    const circle = entry.target.querySelector('.circle-progress');
+                    if(circle) {
+                        setTimeout(() => {
+                            circle.style.strokeDashoffset = circle.dataset.offset;
+                        }, 500);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // 观察所有 fade-up 元素
+        document.querySelectorAll('.fade-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 4. 小程序样机：完整UI渲染和页面切换
+        const phoneContent = document.getElementById('phone-content');
+        
+        // 更新状态栏
+        function updateStatusBar() {
+            const statusBar = document.getElementById('phone-status-bar');
+            if (!statusBar) return;
+            
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            statusBar.innerHTML = `
+                <div class="status-time">${timeStr}</div>
+                <div class="status-right">
+                    <div class="status-signal">
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                    </div>
+                    <div style="font-size: 9px; margin: 0 4px;">5G</div>
+                    <div class="status-battery">
+                        <div class="status-battery-fill"></div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 渲染首页UI - 严格按照 src/pages/index/index.vue 的样式和布局
+        function renderIndexScreen() {
+            phoneContent.innerHTML = `
+                <div style="background: #f5f7fa; min-height: 100%; position: relative;">
+                    <!-- 头部 -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 10px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -50%; right: -20%; width: 100%; height: 200%; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; position: relative; z-index: 1;">
+                            <div style="width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; border: 2px solid rgba(255,255,255,0.3);">李</div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 12px; font-weight: bold; margin-bottom: 3px;">李明 - 深圳优选贸易</div>
+                                <div style="font-size: 9px; opacity: 0.9; display: flex; align-items: center; gap: 4px;">
+                                    <span>金牌代理商</span>
+                                    <span style="background: #ffd700; color: #333; padding: 1px 5px; border-radius: 8px; font-size: 8px; font-weight: bold;">⭐金牌</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 12px; position: relative; z-index: 1;">
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 14px; font-weight: bold; margin-bottom: 3px;">¥12.8K</div>
+                                <div style="font-size: 9px; opacity: 0.9;">本月收入</div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 14px; font-weight: bold; margin-bottom: 3px;">5</div>
+                                <div style="font-size: 9px; opacity: 0.9;">店铺数量</div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 14px; font-weight: bold; margin-bottom: 3px;">95%</div>
+                                <div style="font-size: 9px; opacity: 0.9;">任务完成率</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 内容区 -->
+                    <div style="padding: 10px; padding-bottom: 60px;">
+                        <!-- 快速操作 -->
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <div style="background: white; padding: 12px 8px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                                <div style="width: 32px; height: 32px; background: #e3f2fd; color: #2196f3; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">📚</div>
+                                <div style="font-size: 10px; color: #333; font-weight: 500;">学习课程</div>
+                            </div>
+                            <div style="background: white; padding: 12px 8px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                                <div style="width: 32px; height: 32px; background: #e8f5e8; color: #4caf50; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">📋</div>
+                                <div style="font-size: 10px; color: #333; font-weight: 500;">运营任务</div>
+                            </div>
+                            <div style="background: white; padding: 12px 8px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                                <div style="width: 32px; height: 32px; background: #fff3e0; color: #ff9800; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">🏪</div>
+                                <div style="font-size: 10px; color: #333; font-weight: 500;">店铺管理</div>
+                            </div>
+                            <div style="background: white; padding: 12px 8px; border-radius: 12px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                                <div style="width: 32px; height: 32px; background: #f3e5f5; color: #9c27b0; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;">💰</div>
+                                <div style="font-size: 10px; color: #333; font-weight: 500;">资金管理</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 今日任务卡片 -->
+                        <div style="background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div>
+                                    <div style="font-size: 12px; font-weight: bold; color: #333;">今日任务</div>
+                                    <div style="font-size: 9px; color: #666; margin-top: 2px;">需要完成的重要任务</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #e74c3c;">
+                                    <div style="width: 28px; height: 28px; background: #fee; color: #e74c3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">🔥</div>
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div style="font-size: 11px; font-weight: 500; color: #333; margin-bottom: 3px;">新商品上架</div>
+                                        <div style="font-size: 9px; color: #666;">完成10个电子产品上架任务</div>
+                                        <div style="font-size: 8px; color: #999; margin-top: 3px;">截止时间：今天 18:00</div>
+                                    </div>
+                                    <div style="font-size: 9px; padding: 3px 8px; background: #f8d7da; color: #721c24; border-radius: 8px; font-weight: 500; flex-shrink: 0;">紧急</div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #3498db;">
+                                    <div style="width: 28px; height: 28px; background: #e3f2fd; color: #2196f3; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">📝</div>
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div style="font-size: 11px; font-weight: 500; color: #333; margin-bottom: 3px;">运营课程学习</div>
+                                        <div style="font-size: 9px; color: #666;">学习OZON平台新规则课程</div>
+                                        <div style="font-size: 8px; color: #999; margin-top: 3px;">截止时间：本周五 17:00</div>
+                                    </div>
+                                    <div style="font-size: 9px; padding: 3px 8px; background: #fff3cd; color: #856404; border-radius: 8px; font-weight: 500; flex-shrink: 0;">待完成</div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #27ae60;">
+                                    <div style="width: 28px; height: 28px; background: #e8f5e8; color: #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">✅</div>
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div style="font-size: 11px; font-weight: 500; color: #333; margin-bottom: 3px;">数据报表提交</div>
+                                        <div style="font-size: 9px; color: #666;">提交本周运营数据报表</div>
+                                        <div style="font-size: 8px; color: #999; margin-top: 3px;">完成时间：今天 10:30</div>
+                                    </div>
+                                    <div style="font-size: 9px; padding: 3px 8px; background: #d4edda; color: #155724; border-radius: 8px; font-weight: 500; flex-shrink: 0;">已完成</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 推荐商品卡片 -->
+                        <div style="background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div>
+                                    <div style="font-size: 12px; font-weight: bold; color: #333;">智能推荐商品</div>
+                                    <div style="font-size: 9px; color: #666; margin-top: 2px;">基于您的店铺数据推荐</div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                                <div style="background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                                    <div style="width: 100%; height: 90px; background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%); display: flex; align-items: center; justify-content: center; font-size: 32px; color: #667eea;">📱</div>
+                                    <div style="padding: 12px;">
+                                        <div style="font-size: 10px; font-weight: 600; color: #333; margin-bottom: 6px; line-height: 1.3; height: 26px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">iPhone 15 Pro Max 手机壳</div>
+                                        <div style="font-size: 8px; background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); color: #27ae60; padding: 2px 6px; border-radius: 4px; font-weight: 500; margin-bottom: 6px; display: inline-block;">利润率 35%</div>
+                                        <div style="font-size: 12px; font-weight: bold; color: #e74c3c;">¥89</div>
+                                    </div>
+                                </div>
+                                <div style="background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                                    <div style="width: 100%; height: 90px; background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%); display: flex; align-items: center; justify-content: center; font-size: 32px; color: #667eea;">🎧</div>
+                                    <div style="padding: 12px;">
+                                        <div style="font-size: 10px; font-weight: 600; color: #333; margin-bottom: 6px; line-height: 1.3; height: 26px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">无线蓝牙耳机 AirPods</div>
+                                        <div style="font-size: 8px; background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); color: #27ae60; padding: 2px 6px; border-radius: 4px; font-weight: 500; margin-bottom: 6px; display: inline-block;">利润率 28%</div>
+                                        <div style="font-size: 12px; font-weight: bold; color: #e74c3c;">¥156</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部菜单栏 -->
+                    <div class="phone-tab-bar" style="position: fixed; bottom: 0; left: 0; right: 0; height: 50px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e9ecef; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 999;">
+                        <div class="tab-item active" data-tab="index" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px;">🏠</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #d81e06;">首页</div>
+                        </div>
+                        <div class="tab-item" data-tab="task" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">📋</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">任务</div>
+                        </div>
+                        <div class="tab-item" data-tab="ai" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">🤖</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">AI智能体</div>
+                        </div>
+                        <div class="tab-item" data-tab="product" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">🛍️</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">选品</div>
+                        </div>
+                        <div class="tab-item" data-tab="profile" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">👤</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">我的</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 渲染任务页面UI - 严格按照 src/pages/task-execution/task-execution.vue
+        function renderTaskScreen() {
+            phoneContent.innerHTML = `
+                <div style="background: #f5f5f5; min-height: 100%; position: relative;">
+                    <!-- 头部 -->
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;">运营任务</div>
+                        <div style="font-size: 9px; opacity: 0.9;">执行平台派发的运营任务</div>
+                    </div>
+                    
+                    <!-- 内容区 -->
+                    <div style="padding: 10px; padding-bottom: 60px;">
+                        <!-- 任务统计 -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                            <div style="background: white; border-radius: 10px; padding: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                                <div style="font-size: 16px; font-weight: bold; color: #667eea; margin-bottom: 4px;">3</div>
+                                <div style="font-size: 9px; color: #666;">进行中</div>
+                            </div>
+                            <div style="background: white; border-radius: 10px; padding: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                                <div style="font-size: 16px; font-weight: bold; color: #667eea; margin-bottom: 4px;">12</div>
+                                <div style="font-size: 9px; color: #666;">已完成</div>
+                            </div>
+                            <div style="background: white; border-radius: 10px; padding: 10px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                                <div style="font-size: 16px; font-weight: bold; color: #667eea; margin-bottom: 4px;">5</div>
+                                <div style="font-size: 9px; color: #666;">待处理</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 任务筛选 -->
+                        <div style="display: flex; background: white; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden;">
+                            <button style="flex: 1; padding: 10px; text-align: center; background: #667eea; border: none; font-size: 10px; font-weight: bold; color: white; cursor: pointer;">全部</button>
+                            <button style="flex: 1; padding: 10px; text-align: center; background: white; border: none; font-size: 10px; font-weight: bold; color: #666; cursor: pointer;">待处理</button>
+                            <button style="flex: 1; padding: 10px; text-align: center; background: white; border: none; font-size: 10px; font-weight: bold; color: #666; cursor: pointer;">进行中</button>
+                            <button style="flex: 1; padding: 10px; text-align: center; background: white; border: none; font-size: 10px; font-weight: bold; color: #666; cursor: pointer;">已完成</button>
+                        </div>
+                        
+                        <!-- 任务卡片 -->
+                        <div style="background: white; border-radius: 10px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #2196f3;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <div style="font-size: 11px; font-weight: bold; color: #333; flex: 1;">新商品上架任务</div>
+                                <div style="padding: 3px 8px; border-radius: 8px; font-size: 9px; font-weight: bold; background: #ffebee; color: #f44336; margin-left: 8px;">高优先级</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 9px; color: #666;">
+                                <div>⏰ 截止：今天 18:00</div>
+                                <div style="padding: 2px 8px; border-radius: 8px; font-size: 9px; font-weight: bold; background: #e3f2fd; color: #2196f3;">进行中</div>
+                            </div>
+                            <div style="font-size: 10px; color: #666; line-height: 1.4; margin-bottom: 8px;">
+                                完成10个电子产品上架任务，需要上传商品图片、填写商品信息、设置价格和库存。
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 9px; color: #666; margin-bottom: 4px;">
+                                    <span>完成进度</span>
+                                    <span>50%</span>
+                                </div>
+                                <div style="width: 100%; height: 5px; background: #f0f0f0; border-radius: 3px; overflow: hidden;">
+                                    <div style="height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 3px; width: 50%;"></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button style="flex: 1; padding: 6px 12px; border: none; border-radius: 20px; font-size: 10px; font-weight: bold; cursor: pointer; background: #667eea; color: white;">继续执行</button>
+                                <button style="flex: 1; padding: 6px 12px; border: none; border-radius: 20px; font-size: 10px; font-weight: bold; cursor: pointer; background: #f0f0f0; color: #666;">查看详情</button>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; border-radius: 10px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 4px solid #ff9800;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <div style="font-size: 11px; font-weight: bold; color: #333; flex: 1;">价格调整任务</div>
+                                <div style="padding: 3px 8px; border-radius: 8px; font-size: 9px; font-weight: bold; background: #fff3e0; color: #ff9800; margin-left: 8px;">中优先级</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 9px; color: #666;">
+                                <div>⏰ 截止：明天 12:00</div>
+                                <div style="padding: 2px 8px; border-radius: 8px; font-size: 9px; font-weight: bold; background: #fff3e0; color: #ff9800;">待处理</div>
+                            </div>
+                            <div style="font-size: 10px; color: #666; line-height: 1.4; margin-bottom: 8px;">
+                                根据市场变化调整5个SKU的价格，建议降价5%以获取BuyBox。
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 9px; color: #666; margin-bottom: 4px;">
+                                    <span>完成进度</span>
+                                    <span>0%</span>
+                                </div>
+                                <div style="width: 100%; height: 5px; background: #f0f0f0; border-radius: 3px; overflow: hidden;">
+                                    <div style="height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 3px; width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button style="flex: 1; padding: 6px 12px; border: none; border-radius: 20px; font-size: 10px; font-weight: bold; cursor: pointer; background: #667eea; color: white;">开始执行</button>
+                                <button style="flex: 1; padding: 6px 12px; border: none; border-radius: 20px; font-size: 10px; font-weight: bold; cursor: pointer; background: #f0f0f0; color: #666;">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部菜单栏 -->
+                    <div class="phone-tab-bar" style="position: fixed; bottom: 0; left: 0; right: 0; height: 50px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #e9ecef; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 999;">
+                        <div class="tab-item" data-tab="index" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">🏠</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">首页</div>
+                        </div>
+                        <div class="tab-item active" data-tab="task" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px;">📋</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #d81e06;">任务</div>
+                        </div>
+                        <div class="tab-item" data-tab="ai" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">🤖</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">AI智能体</div>
+                        </div>
+                        <div class="tab-item" data-tab="product" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">🛍️</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">选品</div>
+                        </div>
+                        <div class="tab-item" data-tab="profile" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 6px; cursor: pointer;">
+                            <div style="font-size: 18px; opacity: 0.6;">👤</div>
+                            <div style="font-size: 9px; font-weight: 500; color: #999999;">我的</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 菜单栏切换功能 - 使用事件委托
+        let currentTab = 'index';
+        
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // 根据tab切换页面内容
+            if (tabName === 'index') {
+                renderIndexScreen();
+            } else if (tabName === 'task') {
+                renderTaskScreen();
+            } else {
+                // 其他页面暂时显示首页内容
+                renderIndexScreen();
+            }
+            
+            // 更新菜单栏激活状态（在内容渲染后）
+            setTimeout(() => {
+                updateTabBarState(tabName);
+            }, 50);
+        }
+        
+        function updateTabBarState(activeTab) {
+            const tabBar = phoneContent.querySelector('.phone-tab-bar');
+            if (tabBar) {
+                const tabItems = tabBar.querySelectorAll('.tab-item');
+                tabItems.forEach(item => {
+                    const tab = item.getAttribute('data-tab');
+                    const isActive = tab === activeTab;
+                    item.classList.toggle('active', isActive);
+                    
+                    // 更新样式
+                    const icon = item.querySelector('div:first-child');
+                    const text = item.querySelector('div:last-child');
+                    if (icon && text) {
+                        if (isActive) {
+                            icon.style.opacity = '1';
+                            text.style.color = '#d81e06';
+                        } else {
+                            icon.style.opacity = '0.6';
+                            text.style.color = '#999999';
+                        }
+                    }
+                });
+            }
+        }
+        
+        // 使用事件委托，在phoneContent上绑定一次事件
+        if (phoneContent) {
+            phoneContent.addEventListener('click', function(e) {
+                const tabItem = e.target.closest('.tab-item');
+                if (tabItem) {
+                    const tab = tabItem.getAttribute('data-tab');
+                    if (tab) {
+                        switchTab(tab);
+                    }
+                }
+            });
+        }
+        
+        // 更新平板端数据数字，模拟实时更新
+        function updateDashboardNumbers() {
+            const cards = document.querySelectorAll('.ui-card');
+            if (cards.length === 0) return;
+            
+            // GMV 卡片
+            const gmvCard = cards[0];
+            const gmvValue = gmvCard.querySelector('.ui-card-value');
+            if (gmvValue) {
+                const baseValue = 124590;
+                const variation = Math.floor(Math.random() * 2000) - 1000; // -1000 到 +1000
+                const newValue = baseValue + variation;
+                gmvValue.textContent = `₽ ${newValue.toLocaleString()}`;
+            }
+            
+            // 订单数量卡片
+            const orderCard = cards[1];
+            const orderValue = orderCard.querySelector('.ui-card-value');
+            if (orderValue) {
+                const baseValue = 1247;
+                const variation = Math.floor(Math.random() * 20) - 10; // -10 到 +10
+                const newValue = baseValue + variation;
+                orderValue.textContent = newValue.toLocaleString();
+            }
+            
+            // 净利润卡片
+            const profitCard = cards[2];
+            const profitValue = profitCard.querySelector('.ui-card-value');
+            if (profitValue) {
+                const baseValue = 28920;
+                const variation = Math.floor(Math.random() * 500) - 250; // -250 到 +250
+                const newValue = baseValue + variation;
+                profitValue.textContent = `₽ ${newValue.toLocaleString()}`;
+            }
+            
+            // 转化率卡片
+            const rateCard = cards[3];
+            const rateValue = rateCard.querySelector('.ui-card-value');
+            if (rateValue) {
+                const baseValue = 3.24;
+                const variation = (Math.random() * 0.2) - 0.1; // -0.1 到 +0.1
+                const newValue = baseValue + variation;
+                rateValue.textContent = `${newValue.toFixed(2)}%`;
+            }
+        }
+        
+        // 初始化状态栏和首页
+        updateStatusBar();
+        renderIndexScreen();
+        
+        // 每分钟更新一次状态栏时间
+        setInterval(updateStatusBar, 60000);
+        
+        // 每3秒更新一次数据数字
+        setInterval(updateDashboardNumbers, 3000);
+
+        // 5. 样机整体等比缩放：根据容器宽度自适应
+        function updateDeviceScale() {
+            const group = document.querySelector('.device-group');
+            const wrapper = document.querySelector('.device-stage-wrapper');
+            if (!group || !wrapper) return;
+
+            const baseWidth = 900; // 与 CSS 中 device-group 宽度保持一致
+            const availableWidth = wrapper.clientWidth;
+            let scale = availableWidth / baseWidth;
+
+            // 限制缩放范围，确保在不同尺寸下都能完整展示
+            const maxScale = 1;
+            const minScale = 0.25;
+            if (scale > maxScale) scale = maxScale;
+            if (scale < minScale) scale = minScale;
+
+            group.style.transform = `scale(${scale})`;
+            group.style.transformOrigin = 'center center';
+        }
+
+        // 初始化缩放
+        updateDeviceScale();
+        window.addEventListener('resize', updateDeviceScale);
+        
+        // 使用 ResizeObserver 监听容器尺寸变化（更精确）
+        if (window.ResizeObserver) {
+            const resizeObserver = new ResizeObserver(() => {
+                updateDeviceScale();
+            });
+            const wrapper = document.querySelector('.device-stage-wrapper');
+            if (wrapper) {
+                resizeObserver.observe(wrapper);
+            }
+        }
+    </script>
+
+</body>
+</html>

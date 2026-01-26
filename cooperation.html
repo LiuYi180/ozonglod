@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>商务合作 | Ozon 掘金 PRO</title>
+    <!-- 引入字体：Inter (正文) + JetBrains Mono (技术标注) -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FAFAFA;
+            --text-main: #111111;
+            --text-sub: #666666;
+            --brand-purple: #6D28D9;
+            --brand-accent: #8B5CF6;
+            --border-light: rgba(0, 0, 0, 0.08);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-float: 0 20px 40px -10px rgba(109, 40, 217, 0.1);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        h1, h2, h3 { font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+        a { text-decoration: none; color: inherit; }
+
+        .tech-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--brand-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(139, 92, 246, 0.08);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.8rem;
+        }
+
+        .fade-up {
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* 导航统一样式 */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 1rem 5%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(250, 250, 250, 0.9);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-light); z-index: 999;
+        }
+        .nav-container { max-width: 1200px; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.2rem; font-weight: 900; display: flex; align-items: center; gap: 10px; }
+        .brand-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+        }
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; }
+        .nav-menu a { font-size: 0.95rem; font-weight: 500; transition: color 0.3s; position: relative; }
+        .nav-menu a:hover { color: var(--brand-purple); }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%);
+            transition: width 0.3s;
+        }
+        .nav-menu a:hover::after { width: 100%; }
+        .nav-menu a.active { color: var(--brand-purple); }
+        .nav-menu a.active::after { width: 100%; }
+        .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
+        .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text-main); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 5%; }
+        .section { padding: 6rem 0; position: relative; }
+        .text-center { text-align: center; }
+
+        .hero { padding: 10rem 0 5rem; text-align: center; }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 1rem; }
+        .hero p { max-width: 600px; margin: 0 auto; color: var(--text-sub); font-size: 1.1rem; }
+
+        .card-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem;
+        }
+        .coop-card {
+            background: white; border: 1px solid var(--border-light);
+            border-radius: 16px; padding: 2rem;
+            transition: all 0.3s var(--ease-out); position: relative;
+        }
+        .coop-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--brand-purple);
+            box-shadow: var(--shadow-float);
+        }
+        .card-icon {
+            width: 48px; height: 48px; background: #F3E8FF; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--brand-purple); margin-bottom: 1.5rem;
+        }
+        .coop-card h3 { margin-bottom: 0.8rem; font-size: 1.2rem; }
+        .coop-card p { font-size: 0.95rem; line-height: 1.6; }
+
+        .ability-item {
+            display: flex; gap: 1rem; align-items: flex-start;
+            padding: 1.5rem; border-bottom: 1px solid var(--border-light);
+        }
+        .ability-item:last-child { border-bottom: none; }
+        .ability-title { font-weight: 700; margin-bottom: 0.5rem; display: block; }
+
+        .process-wrapper {
+            display: flex; justify-content: space-between; margin-top: 4rem; position: relative;
+        }
+        .process-wrapper::before {
+            content: ''; position: absolute; top: 24px; left: 0; width: 100%; height: 2px;
+            background: var(--border-light); z-index: 0;
+        }
+        .process-step {
+            position: relative; z-index: 1; background: var(--bg-color); width: 22%;
+            padding-right: 1rem;
+        }
+        .step-num {
+            font-family: var(--font-mono); font-weight: 700; color: var(--brand-purple);
+            background: white; border: 1px solid var(--border-light);
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            margin-bottom: 1rem; font-size: 0.9rem;
+        }
+        .process-step h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .process-step p { font-size: 0.9rem; color: var(--text-sub); }
+
+        .notice-box {
+            background: white; border: 1px solid var(--border-light);
+            border-left: 4px solid var(--brand-purple);
+            border-radius: 8px; padding: 3rem; margin-top: 2rem;
+            position: relative;
+        }
+        .notice-list { list-style: none; margin-top: 1.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .notice-item { display: flex; align-items: flex-start; gap: 10px; }
+        .check-icon { color: var(--brand-accent); flex-shrink: 0; margin-top: 4px; }
+        .exclude-note {
+            margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-light);
+            font-size: 0.9rem; color: var(--text-sub); display: flex; gap: 10px;
+        }
+
+        .contact-section { text-align: center; background: white; border-top: 1px solid var(--border-light); }
+        .btn-primary {
+            display: inline-block; background: var(--text-main); color: white;
+            padding: 0.8rem 2.5rem; border-radius: 50px; font-weight: 600;
+            transition: 0.3s; margin-top: 2rem;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .mobile-menu-toggle { display: flex; }
+            .card-grid { grid-template-columns: 1fr; }
+            .process-wrapper { flex-direction: column; gap: 2rem; }
+            .process-wrapper::before { 
+                width: 2px; height: 100%; left: 14px; top: 0; 
+            }
+            .process-step { width: 100%; padding-left: 40px; }
+            .step-num { position: absolute; left: 0; top: 0; width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+            .notice-list { grid-template-columns: 1fr; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav>
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <img src="logogold.svg" alt="Ozon 掘金 PRO Logo">
+                </div>
+                <span>Ozon 掘金 PRO</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="product.html">产品及服务</a></li>
+                <li><a href="platform.html">平台服务</a></li>
+                <li><a href="cooperation.html" class="active">商务合作</a></li>
+                <li><a href="about.html">关于我们</a></li>
+            </ul>
+            <button class="mobile-menu-toggle">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 1. Hero -->
+    <header class="hero">
+        <div class="container fade-up">
+            <div class="tech-tag">PARTNERSHIP</div>
+            <h1>合作与交流</h1>
+            <h2 style="font-size: 1.5rem; color: var(--text-sub); font-weight: 500; margin: 1rem 0;">基于产品与能力的长期合作</h2>
+            <p>
+                我们欢迎基于实际运营经验的合作与交流。<br>
+                合作形式将围绕内容共建、经验分享与服务协同展开。
+            </p>
+        </div>
+    </header>
+
+    <!-- 2. 合作方向 -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center fade-up">
+                <div class="tech-tag">SCOPE</div>
+                <h2>合作方向</h2>
+                <p>围绕产品与平台能力展开</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="coop-card fade-up" style="transition-delay: 0.1s;">
+                    <div class="card-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <h3>渠道合作</h3>
+                    <p>与具备明确用户群体或服务场景的渠道方合作，在合适的场景中共同拓展产品价值。</p>
+                </div>
+
+                <div class="coop-card fade-up" style="transition-delay: 0.2s;">
+                    <div class="card-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </div>
+                    <h3>服务商合作</h3>
+                    <p>与跨境电商服务商、技术服务团队合作，将平台能力融入更完整的服务方案中。</p>
+                </div>
+
+                <div class="coop-card fade-up" style="transition-delay: 0.3s;">
+                    <div class="card-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <h3>内容与生态合作</h3>
+                    <p>与内容团队、社群组织或行业平台合作，共建长期可持续的行业生态。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 核心能力 -->
+    <section class="section" style="background: white;">
+        <div class="container">
+            <div class="text-center fade-up" style="margin-bottom: 3rem;">
+                <div class="tech-tag">CAPABILITIES</div>
+                <h2>我们能提供的能力</h2>
+                <p>来自产品与平台本身的支持</p>
+            </div>
+
+            <div class="fade-up" style="max-width: 800px; margin: 0 auto; border: 1px solid var(--border-light); border-radius: 12px;">
+                <div class="ability-item">
+                    <div style="font-family: var(--font-mono); color: var(--brand-purple); font-weight: bold;">01.</div>
+                    <div>
+                        <span class="ability-title">产品与系统能力</span>
+                        <p style="font-size: 0.95rem; color: var(--text-sub);">提供稳定的产品体系与平台能力，支持多终端、多角色的实际使用场景。</p>
+                    </div>
+                </div>
+                <div class="ability-item">
+                    <div style="font-family: var(--font-mono); color: var(--brand-purple); font-weight: bold;">02.</div>
+                    <div>
+                        <span class="ability-title">技术与数据支持</span>
+                        <p style="font-size: 0.95rem; color: var(--text-sub);">提供数据分析能力与系统对接支持，在合理范围内进行能力开放与协作。</p>
+                    </div>
+                </div>
+                <div class="ability-item">
+                    <div style="font-family: var(--font-mono); color: var(--brand-purple); font-weight: bold;">03.</div>
+                    <div>
+                        <span class="ability-title">用户与场景基础</span>
+                        <p style="font-size: 0.95rem; color: var(--text-sub);">聚焦真实 Ozon 卖家场景，确保合作基于实际业务需求，而非空泛资源。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. 合作流程 -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center fade-up">
+                <div class="tech-tag">PROCESS</div>
+                <h2>合作方式与流程</h2>
+                <p>清晰、克制、可执行</p>
+            </div>
+
+            <div class="process-wrapper fade-up">
+                <div class="process-step">
+                    <div class="step-num">STEP_01</div>
+                    <h3>合作需求沟通</h3>
+                    <p>明确合作目标、方式与边界</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">STEP_02</div>
+                    <h3>能力匹配评估</h3>
+                    <p>评估双方资源与能力是否适配</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">STEP_03</div>
+                    <h3>合作方案确认</h3>
+                    <p>确定具体合作形式与执行方式</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">STEP_04</div>
+                    <h3>推进与复盘</h3>
+                    <p>在合作过程中持续评估与调整</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 前置说明 -->
+    <section class="section">
+        <div class="container">
+            <div class="notice-box fade-up">
+                <h3 style="display: flex; align-items: center; gap: 10px;">
+                    <svg width="24" height="24" fill="none" stroke="#6D28D9" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    合作前置说明
+                </h3>
+                <p style="margin-top: 10px; color: var(--text-sub);">为确保合作效率与质量，我们更倾向于以下合作方：</p>
+                
+                <ul class="notice-list">
+                    <li class="notice-item">
+                        <svg class="check-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span>有明确业务场景与长期目标</span>
+                    </li>
+                    <li class="notice-item">
+                        <svg class="check-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span>理解并认可平台化产品逻辑</span>
+                    </li>
+                    <li class="notice-item">
+                        <svg class="check-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <span>接受合作中的边界与规则</span>
+                    </li>
+                </ul>
+
+                <div class="exclude-note">
+                    <span style="font-weight: bold; color: var(--text-main);">NOTE:</span>
+                    若仅寻求短期曝光、单次推广或价格导向合作，可能不适合当前阶段的合作方式。
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 联系 -->
+    <section class="section contact-section">
+        <div class="container fade-up">
+            <div class="tech-tag">CONTACT</div>
+            <h2>开启进一步沟通</h2>
+            <p style="margin-top: 1rem; color: var(--text-sub);">
+                如您认为双方存在潜在合作空间，欢迎与我们联系。
+            </p>
+            <a href="mailto:business@ozon-pro.com" class="btn-primary">邮件联系：business@ozon-pro.com</a>
+            <div style="margin-top: 3rem; padding: 2rem; background: #F8F9FA; border-radius: 12px; border-left: 4px solid var(--brand-purple);">
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-sub); margin: 0;">
+                    <strong>合规声明：</strong>所有合作内容以合规、真实、可验证为前提，不涉及任何形式的收益承诺或推广诱导。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 2rem 5%; text-align: center; color: var(--text-sub); border-top: 1px solid var(--border-light); font-size: 0.85rem;">
+        © 2025 Ozon 掘金 PRO. All rights reserved.<br><br>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light); line-height: 1.6;">
+            本网站内容用于介绍产品功能与支持方式<br>
+            不构成运营成果或收益承诺<br>
+            用户需根据自身情况独立判断与决策
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        const toggle = document.querySelector('.mobile-menu-toggle');
+        const menu = document.querySelector('.nav-menu');
+        if(toggle && menu) {
+            toggle.addEventListener('click', () => {
+                const isHidden = getComputedStyle(menu).display === 'none';
+                if(isHidden) {
+                    menu.style.display = 'flex';
+                    menu.style.position = 'absolute';
+                    menu.style.top = '100%';
+                    menu.style.left = 0;
+                    menu.style.width = '100%';
+                    menu.style.background = '#fff';
+                    menu.style.flexDirection = 'column';
+                    menu.style.padding = '2rem';
+                    menu.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                } else {
+                    menu.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>关于我们 | Ozon 掘金 PRO</title>
+    <!-- 引入 Inter (正文) 和 JetBrains Mono (技术感/装饰) -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- 0. 全局变量与基础设置 --- */
+        :root {
+            --bg-color: #FAFAFA;
+            --text-main: #111111;
+            --text-sub: #52525B;
+            --brand-purple: #6D28D9;
+            --brand-accent: #8B5CF6;
+            --border-line: rgba(0, 0, 0, 0.06);
+            --border-active: rgba(109, 40, 217, 0.3);
+            --font-mono: 'JetBrains Mono', monospace;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            /* 与首页等页面统一的浅灰色点阵背景 */
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        h1, h2, h3 { letter-spacing: -0.02em; font-weight: 800; line-height: 1.2; }
+        p { color: var(--text-sub); }
+        a { text-decoration: none; color: inherit; }
+
+        .tech-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--brand-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 0.8rem;
+        }
+        .tech-label::before { content: ''; width: 6px; height: 6px; background: var(--brand-accent); border-radius: 1px; }
+
+        .fade-up { opacity: 0; transform: translateY(30px); transition: 1s var(--ease-out); }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        
+        @keyframes scan { 0% { width: 0; opacity: 0; } 50% { opacity: 1; } 100% { width: 100%; opacity: 0; } }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.05); } }
+
+        /* --- 导航，与其他页面统一 --- */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 1rem 5%;
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(250, 250, 250, 0.9); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-line); z-index: 999;
+        }
+        .nav-container { max-width: 1200px; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-size: 1.2rem; font-weight: 900; display: flex; align-items: center; gap: 10px; }
+        .brand-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+        }
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; }
+        .nav-menu a { font-size: 0.9rem; font-weight: 500; transition: color 0.3s; position: relative; }
+        .nav-menu a:hover { color: var(--brand-purple); }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%);
+            transition: width 0.3s;
+        }
+        .nav-menu a:hover::after { width: 100%; }
+        .nav-menu a.active { color: var(--brand-purple); }
+        .nav-menu a.active::after { width: 100%; }
+        .mobile-toggle { display: none; flex-direction: column; gap: 5px; background:none; border:none; }
+        .mobile-toggle span { width: 24px; height: 2px; background: #111; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 5%; position: relative; }
+        .section { padding: 8rem 0; border-bottom: 1px solid var(--border-line); position: relative; }
+
+        .hero {
+            padding: 12rem 0 8rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
+        }
+        .hero-title { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 2rem; position: relative; display: inline-block; }
+        .hero-desc { font-size: 1.1rem; max-width: 700px; margin: 0 auto; line-height: 1.8; }
+        
+        .cursor { display: inline-block; width: 3px; height: 1em; background: var(--brand-purple); animation: blink 1s infinite; vertical-align: middle; margin-left: 5px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .mission-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        
+        .system-core-visual {
+            position: relative; height: 300px; display: flex; justify-content: center; align-items: center;
+            background: white; border: 1px solid var(--border-line); border-radius: 20px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
+        }
+        .core-circle {
+            position: absolute; border-radius: 50%; border: 1px solid var(--brand-accent);
+            opacity: 0.2;
+        }
+        .c1 { width: 100px; height: 100px; animation: pulse 4s infinite; }
+        .c2 { width: 180px; height: 180px; animation: pulse 4s infinite 1s; }
+        .c3 { width: 260px; height: 260px; animation: pulse 4s infinite 2s; border-style: dashed; }
+        .core-center {
+            width: 40px; height: 40px; background: var(--brand-purple); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; color: white;
+            font-family: var(--font-mono); font-size: 0.8rem; z-index: 2;
+        }
+
+        .principles-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem;
+        }
+        .hud-card {
+            background: white; border: 1px solid var(--border-line); padding: 2rem;
+            position: relative; transition: 0.3s;
+        }
+        .hud-card:hover {
+            transform: translateY(-5px); border-color: var(--brand-purple);
+            box-shadow: 0 10px 30px -5px rgba(109, 40, 217, 0.1);
+        }
+        .corner { position: absolute; width: 10px; height: 10px; border: 2px solid var(--brand-accent); opacity: 0; transition: 0.3s; }
+        .tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+        .br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+        .hud-card:hover .corner { opacity: 1; }
+
+        .p-num { font-family: var(--font-mono); font-size: 2rem; color: var(--border-line); font-weight: 700; margin-bottom: 1rem; display: block; }
+        .hud-card:hover .p-num { color: var(--brand-purple); }
+
+        .focus-list {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem;
+        }
+        .focus-item {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 1.5rem; background: #F8F9FA; border-left: 2px solid var(--border-line);
+            transition: 0.3s;
+        }
+        .focus-item:hover { border-left-color: var(--brand-purple); background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .focus-icon { color: var(--brand-purple); margin-top: 3px; }
+
+        .contact-box {
+            background: #111; color: white; border-radius: 20px; padding: 4rem 2rem;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .contact-box h2 { color: white; margin-bottom: 1rem; }
+        .contact-box p { color: #888; margin-bottom: 2rem; }
+        .bg-code {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            font-family: var(--font-mono); font-size: 0.8rem; color: rgba(255,255,255,0.03);
+            text-align: left; padding: 20px; pointer-events: none; line-height: 1.4;
+        }
+        .btn-white {
+            display: inline-block; background: white; color: black;
+            padding: 1rem 2.5rem; border-radius: 50px; font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-white:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .mobile-toggle { display: flex; }
+            .mission-wrapper { grid-template-columns: 1fr; }
+            .principles-grid { grid-template-columns: 1fr; }
+            .focus-list { grid-template-columns: 1fr; }
+            .system-core-visual { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 导航 -->
+    <nav>
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <img src="logogold.svg" alt="Ozon 掘金 PRO Logo">
+                </div>
+                <span>Ozon 掘金 PRO</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="product.html">产品及服务</a></li>
+                <li><a href="platform.html">平台服务</a></li>
+                <li><a href="cooperation.html">商务合作</a></li>
+                <li><a href="about.html" class="active">关于我们</a></li>
+            </ul>
+            <button class="mobile-toggle"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- 1. Hero: Who We Are -->
+    <header class="hero">
+        <div class="container fade-up">
+            <div style="display: flex; justify-content: center;">
+                <div class="tech-label">WHO_WE_ARE</div>
+            </div>
+            <h1 class="hero-title">
+                关于 Ozon 掘金 PRO<span class="cursor"></span>
+            </h1>
+            <h2 style="font-size: 1.5rem; color: var(--text-sub); font-weight: 500; margin-bottom: 2rem;">
+                一个专注于 AI 与跨境电商结合的产品团队
+            </h2>
+            <p class="hero-desc">
+                Ozon 掘金 PRO 源于对 Ozon 平台长期运营过程的观察与整理。<br>
+                我们将实践中形成的经验、流程与工具进行系统化归纳，用于为用户提供更清晰的运营参考。
+            </p>
+        </div>
+    </header>
+
+    <!-- 2. What We Do -->
+    <section class="section">
+        <div class="container mission-wrapper">
+            <div class="fade-up">
+                <div class="tech-label">WHAT_WE_DO</div>
+                <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">构建长期可用的<br>运营系统</h2>
+                <p style="margin-bottom: 1.5rem;">
+                    我们正在构建一套面向 Ozon 平台的智能运营系统，覆盖决策、执行与反馈等关键环节。
+                </p>
+                <p>
+                    我们配备由长期从事相关运营工作的人员组成的支持团队，通过社群与对接方式，为用户提供基于经验的运营交流与指导支持。
+                </p>
+            </div>
+            <div class="system-core-visual fade-up">
+                <div class="core-circle c1"></div>
+                <div class="core-circle c2"></div>
+                <div class="core-circle c3"></div>
+                <div class="core-center">SYS</div>
+                <div style="position: absolute; bottom: 20px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-sub);">
+                    &gt; SYSTEM_STATUS: STABLE<br>
+                    &gt; PROCESSING DATA...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. How We Do It -->
+    <section class="section" style="background: white;">
+        <div class="container">
+            <div class="fade-up" style="max-width: 600px;">
+                <div class="tech-label">OUR_PRINCIPLES</div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">我们如何做事</h2>
+                <p>产品与系统优先，理性面对每一个需求。</p>
+            </div>
+
+            <div class="principles-grid">
+                <div class="hud-card fade-up" style="transition-delay: 0.1s;">
+                    <span class="corner tl"></span><span class="corner br"></span>
+                    <span class="p-num">01</span>
+                    <h3>以问题为起点</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem;">
+                        所有产品设计均源于真实运营问题，而非抽象概念或功能堆叠。
+                    </p>
+                </div>
+                <div class="hud-card fade-up" style="transition-delay: 0.2s;">
+                    <span class="corner tl"></span><span class="corner br"></span>
+                    <span class="p-num">02</span>
+                    <h3>以系统为核心</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem;">
+                        我们更关注结构是否合理、逻辑是否闭环，而不是单点功能是否炫酷。
+                    </p>
+                </div>
+                <div class="hud-card fade-up" style="transition-delay: 0.3s;">
+                    <span class="corner tl"></span><span class="corner br"></span>
+                    <span class="p-num">03</span>
+                    <h3>以长期为目标</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem;">
+                        产品设计优先考虑可持续性与稳定性，而非短期的流量红利。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Focus Areas -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center fade-up">
+                <div class="tech-label" style="justify-content: center;">FOCUS_AREAS</div>
+                <h2>我们关注的方向</h2>
+                <p>长期视角下的产品判断</p>
+            </div>
+
+            <div class="focus-list">
+                <div class="focus-item fade-up">
+                    <svg class="focus-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    <div>
+                        <strong>AI 在实际业务中的落地</strong>
+                        <p style="font-size: 0.9rem; margin-top: 5px;">拒绝空谈概念，只关注 AI 能解决的具体效率问题。</p>
+                    </div>
+                </div>
+                <div class="focus-item fade-up">
+                    <svg class="focus-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line></svg>
+                    <div>
+                        <strong>多终端协同的产品形态</strong>
+                        <p style="font-size: 0.9rem; margin-top: 5px;">让决策在 Pad 端完成，让执行在 Mobile 端确认。</p>
+                    </div>
+                </div>
+                <div class="focus-item fade-up">
+                    <svg class="focus-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                    <div>
+                        <strong>数据驱动的决策系统</strong>
+                        <p style="font-size: 0.9rem; margin-top: 5px;">建立数据模型，减少人为情绪对运营动作的干扰。</p>
+                    </div>
+                </div>
+                <div class="focus-item fade-up">
+                    <svg class="focus-icon" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <div>
+                        <strong>可持续运行的平台化结构</strong>
+                        <p style="font-size: 0.9rem; margin-top: 5px;">构建能够随着市场变化而自我迭代的底层架构。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Contact -->
+    <section class="section" style="border-bottom: none;">
+        <div class="container fade-up">
+            <div class="contact-box">
+                <div class="bg-code">
+                    import { Connect } from 'ozon-pro';<br>
+                    const team = new Team({ focus: 'long-term' });<br>
+                    // Ready to connect...
+                </div>
+                <h2 style="position: relative; z-index: 2;">联系我们</h2>
+                <p style="position: relative; z-index: 2;">开放、清晰的沟通方式。如需进一步交流，欢迎联系。</p>
+                <div style="position: relative; z-index: 2;">
+                    <a href="mailto:hello@ozon-pro.com" class="btn-white">hello@ozon-pro.com</a>
+                </div>
+                <div style="margin-top: 2rem; position: relative; z-index: 2; font-family: var(--font-mono); font-size: 0.8rem; color: #666;">
+                    RESPONSE_TIME: &lt; 24h
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 2rem 5%; text-align: center; font-size: 0.85rem; color: var(--text-sub); border-top: 1px solid var(--border-line);">
+        © 2025 Ozon 掘金 PRO. Building for the Long Term.<br><br>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-line); line-height: 1.6;">
+            本网站内容用于介绍产品功能与支持方式<br>
+            不构成运营成果或收益承诺<br>
+            用户需根据自身情况独立判断与决策
+        </div>
+    </footer>
+
+    <script>
+        // Scroll Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Mobile Menu
+        const toggle = document.querySelector('.mobile-toggle');
+        const menu = document.querySelector('.nav-menu');
+        if(toggle && menu) {
+            toggle.addEventListener('click', () => {
+                const isHidden = getComputedStyle(menu).display === 'none';
+                if(isHidden) {
+                    menu.style.display = 'flex';
+                    menu.style.position = 'absolute';
+                    menu.style.top = '100%';
+                    menu.style.left = '0';
+                    menu.style.width = '100%';
+                    menu.style.background = '#fff';
+                    menu.style.flexDirection = 'column';
+                    menu.style.padding = '2rem';
+                    menu.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                } else {
+                    menu.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
