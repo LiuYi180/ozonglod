@@ -29,14 +29,14 @@
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.5;
             /* 背景纹理保持一致 */
             background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
             background-size: 32px 32px;
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3 { letter-spacing: -0.03em; font-weight: 800; line-height: 1.2; }
+        h1, h2, h3 { letter-spacing: -0.03em; font-weight: 800; }
         a { text-decoration: none; color: inherit; }
         
         /* 技术标签样式 */
@@ -80,11 +80,50 @@
         }
         .nav-container { max-width: 1200px; width: 100%; display: flex; justify-content: space-between; align-items: center; }
         .brand { font-size: 1.2rem; font-weight: 900; display: flex; align-items: center; gap: 10px; }
-        .nav-menu { display: flex; gap: 2rem; list-style: none; }
-        .nav-menu a { font-size: 0.95rem; font-weight: 500; transition: color 0.3s; }
-        .nav-menu a:hover { color: var(--brand-purple); }
-        .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
-        .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text-main); }
+        .brand-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+        }
+        .brand-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .nav-menu { display: flex; align-items: center; gap: 2rem; list-style: none; }
+        .nav-menu li { position: relative; }
+        .nav-menu a { color: var(--text-main); font-size: 0.95rem; font-weight: 500; transition: color 0.3s; white-space: nowrap; position: relative; }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--brand-gradient);
+            transition: width 0.3s;
+        }
+        @media (hover: hover) {
+            .nav-menu a:hover { color: var(--brand-purple); }
+            .nav-menu a:hover::after { width: 100%; }
+        }
+        .nav-menu a.active { color: var(--brand-purple); }
+        .nav-menu a.active::after { width: 100%; }
+        .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px; }
+        .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text-main); transition: all 0.3s; border-radius: 2px; }
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
 
         /* --- 页面布局 --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; position: relative; }
@@ -135,10 +174,12 @@
             box-shadow: var(--shadow-card); position: relative; z-index: 1;
             transition: 0.3s;
         }
-        .tech-card:hover {
-            border-color: var(--brand-purple);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-float);
+        @media (hover: hover) {
+            .tech-card:hover {
+                border-color: var(--brand-purple);
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-float);
+            }
         }
         .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.8rem; }
         .card-title { font-weight: 700; font-size: 1rem; }
@@ -211,7 +252,7 @@
         }
         
         /* 响应式 */
-        @media (max-width: 1024px) {
+        @media (max-width: 900px) {
             .arch-container { grid-template-columns: 1fr; gap: 20px; }
             .svg-layer { display: none; } /* 移动端隐藏连线 */
             .evo-wrapper { grid-template-columns: 1fr; }
@@ -220,7 +261,8 @@
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .mobile-menu-toggle { display: flex; }
-            .hero-title { font-size: 2.5rem; }
+            .nav-menu a { font-size: 1.1rem; padding: 1.2rem 0; }
+            .hero-title { font-size: 2.8rem; }
         }
     </style>
 </head>
@@ -448,7 +490,7 @@
     </section>
 
     <footer style="padding: 2rem 5%; font-size: 0.85rem; color: var(--text-sub); text-align: center;">
-        © 2025 Ozon 掘金 PRO. All Systems Operational.<br><br>
+        © 2026 Ozon 掘金 PRO. All Systems Operational.<br><br>
         <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light); line-height: 1.6;">
             本网站内容用于介绍产品功能与支持方式<br>
             不构成运营成果或收益承诺<br>
@@ -473,6 +515,7 @@
         const navMenu = document.querySelector('.nav-menu');
         if(mobileToggle && navMenu) {
             mobileToggle.addEventListener('click', () => {
+                mobileToggle.classList.toggle('active');
                 const isHidden = getComputedStyle(navMenu).display === 'none';
                 if(isHidden) {
                     navMenu.style.display = 'flex';
@@ -485,7 +528,30 @@
                     navMenu.style.padding = '2rem';
                     navMenu.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
                 } else {
-                    navMenu.style.display = 'none'; // Revert or use CSS class toggle
+                    navMenu.style.display = 'none';
+                }
+            });
+            
+            // 点击菜单项后关闭移动端菜单
+            navMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileToggle.classList.remove('active');
+                    navMenu.style.display = 'none';
+                });
+            });
+            
+            // 点击外部区域关闭菜单（仅在移动端）
+            const nav = document.querySelector('nav');
+            document.addEventListener('click', (e) => {
+                // 只在移动端（窗口宽度 <= 768px）且菜单展开时执行关闭逻辑
+                const isMobile = window.innerWidth <= 768;
+                const isMenuVisible = getComputedStyle(navMenu).display !== 'none';
+                if (isMobile && isMenuVisible) {
+                    // 排除菜单、切换按钮和整个导航栏区域
+                    if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target) && !nav.contains(e.target)) {
+                        mobileToggle.classList.remove('active');
+                        navMenu.style.display = 'none';
+                    }
                 }
             });
         }

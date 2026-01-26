@@ -25,13 +25,13 @@
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.5;
             background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
             background-size: 32px 32px;
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 800; line-height: 1.2; }
+        h1, h2, h3, h4 { letter-spacing: -0.03em; font-weight: 800; }
         p { color: var(--text-sub); margin-bottom: 1rem; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
@@ -51,6 +51,13 @@
             background: rgba(250, 250, 250, 0.85);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-light); z-index: 999;
+            transition: all 0.3s var(--ease-out-expo);
+        }
+
+        nav.scrolled {
+            padding: 0.7rem 5%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            background: rgba(250, 250, 250, 0.95);
         }
         .nav-container { max-width: 1200px; width: 100%; display: flex; justify-content: space-between; align-items: center; }
         .brand { font-size: 1.2rem; font-weight: 900; display: flex; align-items: center; gap: 10px; }
@@ -68,16 +75,38 @@
             height: 100%;
             object-fit: contain;
         }
-        .nav-menu { display: flex; gap: 2rem; }
-        .nav-menu a { font-size: 0.95rem; font-weight: 500; transition: color 0.3s; position: relative; }
-        .nav-menu a:hover { color: var(--brand-purple); }
-        .nav-menu a.active::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 2px; background: var(--brand-gradient);
+        .nav-menu { display: flex; align-items: center; gap: 2rem; list-style: none; }
+        .nav-menu li { position: relative; }
+        .nav-menu a { color: var(--text-main); font-size: 0.95rem; font-weight: 500; transition: color 0.3s; white-space: nowrap; position: relative; }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--brand-gradient);
+            transition: width 0.3s;
         }
+        @media (hover: hover) {
+            .nav-menu a:hover { color: var(--brand-purple); }
+            .nav-menu a:hover::after { width: 100%; }
+        }
+        .nav-menu a.active { color: var(--brand-purple); }
+        .nav-menu a.active::after { width: 100%; }
         
         /* 移动端菜单按钮 */
-        .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
-        .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text-main); transition: 0.3s; }
+        .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px; }
+        .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text-main); transition: all 0.3s; border-radius: 2px; }
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
 
         /* --- 页面通用布局 --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
@@ -107,7 +136,35 @@
             background: white; border: 1px solid var(--border-light); border-radius: 24px; padding: 2.5rem 2rem;
             text-align: center; transition: 0.3s; position: relative; overflow: hidden;
         }
-        .arch-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-float); border-color: rgba(109, 40, 217, 0.3); }
+        @media (hover: hover) {
+            .arch-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arch-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--brand-gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .arch-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-float), 0 0 30px rgba(109, 40, 217, 0.3);
+            border-color: rgba(109, 40, 217, 0.3);
+        }
+
+        .arch-card:hover::after {
+            opacity: 0.05;
+        }
+        }
         .arch-icon {
             width: 64px; height: 64px; margin: 0 auto 1.5rem; border-radius: 50%;
             background: #F3E8FF; color: var(--brand-purple); display: flex; align-items: center; justify-content: center;
@@ -119,6 +176,7 @@
         .split-section {
             display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 2rem;
         }
+        .split-section > * { min-width: 0; }
         .split-section.reverse { direction: rtl; } /* 图片在左，文字在右 */
         .split-section.reverse .text-content { direction: ltr; }
 
@@ -447,7 +505,7 @@
             transform-origin: center center;
         }
         
-        @media (max-width: 1024px) {
+        @media (max-width: 900px) {
             .css-mobile {
                 transform: scale(0.5);
             }
@@ -457,6 +515,7 @@
             .css-mobile {
                 transform: scale(0.55);
             }
+            .nav-menu a { font-size: 1.1rem; padding: 1.2rem 0; }
         }
         
         @media (max-width: 480px) {
@@ -585,7 +644,9 @@
             background: white; border: 1px solid var(--border-light); border-radius: 24px; padding: 3rem;
             text-align: center; transition: 0.3s;
         }
-        .price-card:hover { transform: translateY(-5px); }
+        @media (hover: hover) {
+            .price-card:hover { transform: translateY(-5px); }
+        }
         .price-card.highlight { border: 2px solid var(--brand-purple); box-shadow: var(--shadow-float); position: relative; }
         .tag-recommend {
             position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
@@ -601,18 +662,20 @@
             padding: 0.8rem 2rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
         .btn-primary { background: var(--text-main); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
         .btn-outline { border: 2px solid var(--text-main); background: transparent; color: var(--text-main); margin-right: 1rem; }
-        .btn-outline:hover { background: var(--text-main); color: white; }
+        @media (hover: hover) {
+            .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+            .btn-outline:hover { background: var(--text-main); color: white; }
+        }
 
         /* --- Footer --- */
         footer { border-top: 1px solid var(--border-light); padding: 3rem 5%; font-size: 0.9rem; color: var(--text-sub); display: flex; justify-content: space-between; }
 
         /* --- Responsive --- */
-        @media (max-width: 1024px) {
+        @media (max-width: 900px) {
             .split-section, .split-section.reverse { grid-template-columns: 1fr; text-align: left; direction: ltr; gap: 2rem; }
             .split-section.reverse .text-content { direction: ltr; }
-            .mockup-wrapper { order: -1; height: auto; padding: 2rem 0; }
+            .mockup-wrapper { order: -1; height: 420px; padding: 0; }
             .pricing-grid { grid-template-columns: 1fr; }
             .css-pad { max-width: 100%; height: 300px; }
         }
@@ -620,14 +683,25 @@
         @media (max-width: 768px) {
             .nav-menu { display: none; } /* 简化处理，移动端隐藏菜单 */
             .mobile-menu-toggle { display: flex; }
+            .nav-menu a { font-size: 1.1rem; padding: 1.2rem 0; }
             .arch-grid { grid-template-columns: 1fr; }
             .page-hero { padding: 8rem 0 3rem; }
-            .page-hero h1 { font-size: 2.5rem; }
+            .page-hero h1 { font-size: 2.8rem; }
+            .section-tag { font-size: 0.95rem; }
             footer { flex-direction: column; gap: 1rem; text-align: center; }
+            .mockup-wrapper { height: 460px; }
+        }
+
+        @media (max-width: 480px) {
+            .mockup-wrapper { height: 500px; }
+            .pad-search { width: 100px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- 粒子背景 -->
+    <div class="particles-bg" id="particlesBg"></div>
 
     <!-- 导航栏 -->
     <nav>
@@ -713,16 +787,16 @@
                     
                     <ul class="feature-list">
                         <li>
-                            <h4>全局经营视角</h4>
-                            <p>集中展示销售、订单、库存、广告、利润等关键指标，帮助你在一个视图内理解当前经营状态。</p>
+                            <h4>一眼看清：钱从哪里来，又花到哪里去</h4>
+                            <p>不再需要打开 5 个表格才能知道今天赚了多少。所有关键数据集中在一个视图，30 秒掌握全局：GMV、订单、库存、广告、利润，一目了然。</p>
                         </li>
                         <li>
-                            <h4>趋势与结构分析</h4>
-                            <p>从时间、品类与结构角度拆解数据变化，辅助判断增长来自哪里，风险正在出现在哪里。</p>
+                            <h4>趋势与结构分析：增长来自哪里，风险在哪里</h4>
+                            <p>从时间、品类与结构角度拆解数据变化。系统会告诉你：这个月的增长主要来自哪个品类？哪个 SKU 的转化率在下降？库存压力最大的品类是哪个？</p>
                         </li>
                         <li>
-                            <h4>策略辅助与对比</h4>
-                            <p>将不同运营策略进行并列分析，帮助你在执行前评估可能的结果差异。</p>
+                            <h4>策略对比：执行前就知道结果差异</h4>
+                            <p>想调整价格但不确定影响？系统会将不同策略并列分析，告诉你：降价 5% 预计带来多少销量增长，对利润的影响是多少。执行前就能评估结果。</p>
                         </li>
                     </ul>
                     <div style="margin-top: 2rem; padding: 1.5rem; background: #F8F9FA; border-left: 3px solid var(--brand-purple); border-radius: 8px;">
@@ -743,7 +817,9 @@
                         <div class="pad-main">
                             <div class="pad-header">
                                 <div class="pad-header-left">
-                                    <div class="pad-logo">OZ</div>
+                                    <div class="pad-logo" style="background: transparent; padding: 0;">
+                                        <img src="logogold.svg" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                                    </div>
                                     <input type="text" class="pad-search" placeholder="搜索..." />
                                 </div>
                                 <div class="pad-header-right">
@@ -833,16 +909,16 @@
                     
                     <ul class="feature-list">
                         <li>
-                            <h4>实时异常提醒</h4>
-                            <p>当库存、成本、转化或广告指标出现异常时，系统会第一时间推送提醒，减少滞后反应。</p>
+                            <h4>实时异常提醒：重要变化不错过</h4>
+                            <p>库存即将断货？转化率突然下降？广告成本异常？系统会第一时间推送提醒到手机，不用等到晚上才发现问题。减少滞后反应，快速应对变化。</p>
                         </li>
                         <li>
-                            <h4>今日关键指标速览</h4>
-                            <p>用最少的信息，告诉你今天是否“偏离预期”。</p>
+                            <h4>今日关键指标速览：30 秒知道今天是否正常</h4>
+                            <p>打开手机，一眼就能看到：今天 GMV 是否达标？转化率是否正常？有没有需要立即处理的问题？用最少的信息，告诉你今天是否"偏离预期"。</p>
                         </li>
                         <li>
-                            <h4>快速确认与反馈</h4>
-                            <p>将复杂操作转化为简单确认动作，降低执行成本，提高响应速度。</p>
+                            <h4>快速确认与反馈：复杂操作变简单</h4>
+                            <p>系统建议调整价格？一键确认即可执行。需要补货？查看建议数量后直接确认。将复杂操作转化为简单确认动作，降低执行成本，提高响应速度。</p>
                         </li>
                     </ul>
                 </div>
@@ -893,16 +969,16 @@
             </div>
             
             <div class="pricing-grid">
-                <div class="price-card fade-up" style="transition-delay: 0.1s;">
-                    <h3>系统使用授权费</h3>
+                <div class="price-card highlight fade-up" style="transition-delay: 0.1s;">
+                    <div class="tag-recommend">保障推荐</div>
+                    <h3>智能终端pad</h3>
                     <div class="price-num">¥3,999</div>
                     <p>一次性买断核心产品能力使用权</p>
                     <hr style="border:none; border-top:1px solid #eee; margin:1.5rem 0;">
                     <p style="font-size:0.9rem;">包含 Pad 端与手机端全功能授权</p>
                 </div>
 
-                <div class="price-card highlight fade-up" style="transition-delay: 0.2s;">
-                    <div class="tag-recommend">保障推荐</div>
+                <div class="price-card fade-up" style="transition-delay: 0.2s;">
                     <h3>年度软件服务费</h3>
                     <div class="price-num">¥1,299 <span>/ 年</span></div>
                     <p>保障平台、数据与 AI 模型的持续更新</p>
@@ -925,7 +1001,7 @@
     </section>
 
     <footer>
-        <div>© 2025 Ozon 掘金 PRO. All rights reserved.</div>
+        <div>© 2026 Ozon 掘金 PRO. All rights reserved.</div>
         <div style="display:flex; gap:20px;">
             <a href="#">隐私协议</a>
             <a href="#">服务条款</a>
@@ -939,6 +1015,36 @@
     </footer>
 
     <script>
+        // 粒子背景生成
+        function createParticles() {
+            const particlesBg = document.getElementById('particlesBg');
+            if (!particlesBg) return;
+            const particleCount = 25;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particlesBg.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // 导航栏滚动效果
+        const nav = document.querySelector('nav');
+        if (nav) {
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            });
+        }
+
         // 简单的进入视口动画逻辑
         const observerOptions = { threshold: 0.1 };
         const observer = new IntersectionObserver((entries) => {
@@ -956,6 +1062,7 @@
         const menu = document.querySelector('.nav-menu');
         if(btn && menu){
             btn.addEventListener('click', ()=>{
+                btn.classList.toggle('active');
                 const isFlex = menu.style.display === 'flex';
                 menu.style.display = isFlex ? 'none' : 'flex';
                 if(!isFlex) {
@@ -968,7 +1075,30 @@
                     menu.style.padding = '20px';
                     menu.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
                 }
-            })
+            });
+            
+            // 点击菜单项后关闭移动端菜单
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    btn.classList.remove('active');
+                    menu.style.display = 'none';
+                });
+            });
+            
+            // 点击外部区域关闭菜单（仅在移动端）
+            const nav = document.querySelector('nav');
+            document.addEventListener('click', (e) => {
+                // 只在移动端（窗口宽度 <= 768px）且菜单展开时执行关闭逻辑
+                const isMobile = window.innerWidth <= 768;
+                const isMenuVisible = getComputedStyle(menu).display !== 'none';
+                if (isMobile && isMenuVisible) {
+                    // 排除菜单、切换按钮和整个导航栏区域
+                    if (!menu.contains(e.target) && !btn.contains(e.target) && !nav.contains(e.target)) {
+                        btn.classList.remove('active');
+                        menu.style.display = 'none';
+                    }
+                }
+            });
         }
 
         // 更新状态栏
@@ -1081,7 +1211,7 @@
                                     <div style="font-size: 9px; padding: 3px 8px; background: #fff3cd; color: #856404; border-radius: 8px; font-weight: 500; flex-shrink: 0;">待完成</div>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #27ae60;">
-                                    <div style="width: 28px; height: 28px; background: #e8f5e8; color: #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;">✅</div>
+                                    <div style="width: 28px; height: 28px; background: #e8f5e8; color: #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
                                     <div style="flex: 1; min-width: 0;">
                                         <div style="font-size: 11px; font-weight: 500; color: #333; margin-bottom: 3px;">数据报表提交</div>
                                         <div style="font-size: 9px; color: #666;">提交本周运营数据报表</div>

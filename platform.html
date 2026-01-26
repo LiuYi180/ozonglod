@@ -27,13 +27,13 @@
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+            line-height: 1.5;
             background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
             background-size: 32px 32px;
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3 { letter-spacing: -0.03em; font-weight: 800; line-height: 1.2; }
+        h1, h2, h3 { letter-spacing: -0.03em; font-weight: 800; }
         a { text-decoration: none; color: inherit; }
 
         .tech-label {
@@ -89,9 +89,9 @@
             height: 100%;
             object-fit: contain;
         }
-        .nav-menu { display: flex; gap: 2rem; list-style: none; }
-        .nav-menu a { font-size: 0.95rem; font-weight: 500; transition: color 0.3s; position: relative; }
-        .nav-menu a:hover { color: var(--brand-purple); }
+        .nav-menu { display: flex; align-items: center; gap: 2rem; list-style: none; }
+        .nav-menu li { position: relative; }
+        .nav-menu a { color: var(--text-main); font-size: 0.95rem; font-weight: 500; transition: color 0.3s; white-space: nowrap; position: relative; }
         .nav-menu a::after {
             content: '';
             position: absolute;
@@ -102,11 +102,23 @@
             background: var(--brand-gradient);
             transition: width 0.3s;
         }
-        .nav-menu a:hover::after { width: 100%; }
+        @media (hover: hover) {
+            .nav-menu a:hover { color: var(--brand-purple); }
+            .nav-menu a:hover::after { width: 100%; }
+        }
         .nav-menu a.active { color: var(--brand-purple); }
         .nav-menu a.active::after { width: 100%; }
-        .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
-        .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text-main); }
+        .mobile-menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px; }
+        .mobile-menu-toggle span { width: 24px; height: 2px; background: var(--text-main); transition: all 0.3s; border-radius: 2px; }
+        .mobile-menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(7px, 7px);
+        }
+        .mobile-menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; position: relative; }
         .section { padding: 6rem 0; position: relative; }
@@ -148,10 +160,12 @@
             box-shadow: var(--shadow-card); position: relative; z-index: 1;
             transition: 0.3s;
         }
-        .tech-card:hover {
-            border-color: var(--brand-purple);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-float);
+        @media (hover: hover) {
+            .tech-card:hover {
+                border-color: var(--brand-purple);
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-float);
+            }
         }
         .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.8rem; }
         .card-title { font-weight: 700; font-size: 1rem; }
@@ -199,6 +213,7 @@
         .n4 { right: -20px; top: 50%; transform: translateY(-50%); }
 
         .device-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 4rem; }
         .device-card {
             background: #fff; border: 1px solid var(--border-light);
             padding: 2rem; border-radius: 16px; position: relative;
@@ -217,17 +232,319 @@
             text-align: center; padding: 6rem 1rem;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 900px) {
             .arch-container { grid-template-columns: 1fr; gap: 20px; }
             .svg-layer { display: none; }
             .evo-wrapper { grid-template-columns: 1fr; }
             .device-grid { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .mobile-menu-toggle { display: flex; }
-            .hero-title { font-size: 2.5rem; }
+            .nav-menu a { font-size: 1.1rem; padding: 1.2rem 0; }
+            .hero-title { font-size: 2.8rem; }
         }
+        /* --- New Illustration Styles --- */
+        .ill-stage {
+            height: 140px;
+            background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid #F3F4F6;
+        }
+
+        /* Pad Visual */
+        .ill-pad {
+            width: 140px; height: 96px;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.02);
+            position: relative;
+            display: flex;
+            overflow: hidden;
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+        @media (hover: hover) {
+            .device-card:hover .ill-pad { transform: scale(1.05) translateY(-5px); }
+        }
+        .ill-pad-nav { width: 32px; height: 100%; background: #F8FAFC; border-right: 1px solid #F1F5F9; display: flex; flex-direction: column; align-items: center; padding-top: 12px; gap: 8px; }
+        .ill-pad-nav-item { width: 16px; height: 16px; border-radius: 4px; background: #E2E8F0; }
+        .ill-pad-nav-item.active { background: var(--brand-purple); }
+        .ill-pad-main { flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .ill-pad-row { display: flex; gap: 6px; height: 24px; }
+        .ill-pad-block { flex: 1; background: #F1F5F9; border-radius: 4px; }
+        .ill-pad-chart-area { flex: 1; background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%); border-radius: 4px; border: 1px solid #F1F5F9; position: relative; display: flex; align-items: flex-end; padding: 0 4px 4px; gap: 4px; }
+        .ill-pad-bar { flex: 1; background: var(--brand-accent); border-radius: 2px 2px 0 0; opacity: 0.6; }
+        .ill-pad-bar:nth-child(1) { height: 40%; }
+        .ill-pad-bar:nth-child(2) { height: 60%; }
+        .ill-pad-bar:nth-child(3) { height: 30%; }
+        .ill-pad-bar:nth-child(4) { height: 80%; }
+        .ill-pad-bar:nth-child(5) { height: 50%; }
+
+        /* Hub Visual */
+        .ill-hub { position: relative; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; }
+        .ill-hub-layer {
+            position: absolute; border-radius: 50%; border: 1px dashed var(--brand-purple);
+            opacity: 0.2; animation: spin 20s linear infinite;
+        }
+        .ill-hub-layer.l1 { width: 100%; height: 100%; }
+        .ill-hub-layer.l2 { width: 70%; height: 70%; animation-direction: reverse; border-style: solid; opacity: 0.1; }
+        .ill-hub-core {
+            width: 40px; height: 40px; background: var(--brand-gradient);
+            border-radius: 12px; transform: rotate(45deg);
+            box-shadow: 0 10px 20px rgba(109, 40, 217, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 1.2rem;
+            z-index: 10;
+        }
+        .ill-hub-dot {
+            position: absolute; width: 8px; height: 8px; background: var(--brand-accent); border-radius: 50%;
+            top: 0; left: 50%; transform: translate(-50%, -50%);
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Phone Visual */
+        .ill-phone {
+            width: 56px; height: 100px;
+            background: #FFFFFF;
+            border: 2px solid #1E293B;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+        @media (hover: hover) {
+            .device-card:hover .ill-phone { transform: translateY(-5px) rotate(-3deg); }
+        }
+        .ill-phone-notch { width: 24px; height: 6px; background: #1E293B; margin: 0 auto; border-radius: 0 0 6px 6px; }
+        .ill-phone-screen { padding: 8px 4px; display: flex; flex-direction: column; gap: 6px; }
+        .ill-msg-bubble {
+            padding: 4px 6px; border-radius: 6px; font-size: 0;
+            background: #F1F5F9; border-left: 2px solid var(--brand-purple);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transform: translateY(10px); opacity: 0;
+            animation: slideIn 3s infinite;
+        }
+        .ill-msg-line { height: 2px; background: #CBD5E1; width: 80%; border-radius: 1px; margin-bottom: 2px; }
+        .ill-msg-line.short { width: 50%; }
+        .ill-msg-bubble:nth-child(1) { animation-delay: 0s; }
+        .ill-msg-bubble:nth-child(2) { animation-delay: 1s; border-left-color: #10B981; }
+        .ill-msg-bubble:nth-child(3) { animation-delay: 2s; border-left-color: #F59E0B; }
+        @keyframes slideIn {
+            0% { transform: translateY(10px); opacity: 0; }
+            10% { transform: translateY(0); opacity: 1; }
+            90% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-10px); opacity: 0; }
+        }
+
+        /* --- Carousel Styles --- */
+        .carousel-section {
+            background: #F9FAFB;
+            padding: 4rem 0;
+            overflow: hidden;
+        }
+        
+        .carousel-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 20px;
+        }
+        
+        .carousel-track-container {
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .carousel-track {
+            display: flex;
+            gap: 20px;
+            /* Remove transition here to manage it via JS for better control or keep it but optimize */
+            /* transition: transform 0.5s ease-in-out; */
+            padding: 40px 5px; 
+            align-items: center;
+            will-change: transform; /* Hardware acceleration hint */
+        }
+        
+        .carousel-slide {
+            flex: 0 0 calc(33.333% - 14px); 
+            min-width: 300px;
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            /* Optimize transition properties */
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease, box-shadow 0.6s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            transform-origin: center center;
+            opacity: 0.7;
+            transform: scale(0.9) translateZ(0); /* Force GPU layer */
+            will-change: transform, opacity; /* Hardware acceleration hint */
+            backface-visibility: hidden; /* Prevent flickering */
+            position: relative; /* For absolute positioning of adopt button */
+        }
+        
+        .adopt-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #F3F4F6;
+            color: var(--text-sub);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        @media (hover: hover) {
+            .adopt-btn:hover {
+                background: var(--brand-purple);
+                color: white;
+            }
+        }
+        
+        .adopt-btn.adopted {
+            background: #10B981;
+            color: white;
+        }
+
+        .carousel-slide.active-center {
+            opacity: 1;
+            transform: scale(1.05); /* Scale up active slide */
+            box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.2);
+            z-index: 2;
+            animation: breathe 4s ease-in-out infinite; /* Breathing effect */
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1.05); box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.15); }
+            50% { transform: scale(1.08); box-shadow: 0 35px 60px -15px rgba(139, 92, 246, 0.25); }
+        }
+        
+        @media (hover: hover) {
+            .carousel-slide:hover {
+                border-color: rgba(139, 92, 246, 0.3);
+                /* Keep the scale if it's the center one, or just lift slightly if not */
+            }
+        }
+        
+        .slide-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--brand-purple);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .slide-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+        
+        .slide-content {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+            flex: 1;
+        }
+        
+        .slide-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            background: #F3F4F6;
+            color: #64748B;
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 2rem;
+        }
+        
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #E2E8F0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .carousel-dot.active {
+            background: var(--brand-purple);
+            width: 20px;
+            border-radius: 5px;
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+        
+        @media (hover: hover) {
+            .carousel-btn:hover {
+                background: var(--brand-purple);
+                color: white;
+                border-color: var(--brand-purple);
+            }
+        }
+        
+        .carousel-btn.prev { left: -20px; }
+        .carousel-btn.next { right: -20px; }
+        
+        @media (max-width: 900px) {
+            .carousel-slide { flex: 0 0 calc(50% - 10px); } /* 2 slides */
+        }
+        
+        @media (max-width: 768px) {
+            .carousel-slide { flex: 0 0 100%; } /* 1 slide */
+            .carousel-btn { display: none; } /* Hide buttons on mobile */
+        }
+
     </style>
 </head>
 <body>
@@ -397,8 +714,27 @@
 
             <div class="device-grid fade-up">
                 <div class="device-card text-center">
-                    <div class="device-wireframe">
-                        <div class="wf-pad"></div>
+                    <div class="ill-stage">
+                        <div class="ill-pad">
+                            <div class="ill-pad-nav">
+                                <div class="ill-pad-nav-item active"></div>
+                                <div class="ill-pad-nav-item"></div>
+                                <div class="ill-pad-nav-item"></div>
+                            </div>
+                            <div class="ill-pad-main">
+                                <div class="ill-pad-row">
+                                    <div class="ill-pad-block" style="width: 40%; flex: none;"></div>
+                                    <div class="ill-pad-block"></div>
+                                </div>
+                                <div class="ill-pad-chart-area">
+                                    <div class="ill-pad-bar"></div>
+                                    <div class="ill-pad-bar"></div>
+                                    <div class="ill-pad-bar"></div>
+                                    <div class="ill-pad-bar"></div>
+                                    <div class="ill-pad-bar"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h3>Pad 端</h3>
                     <div style="font-family:var(--font-mono); font-size:0.8rem; color:var(--text-sub); margin:0.5rem 0;">ROLE: COMMANDER</div>
@@ -406,8 +742,18 @@
                 </div>
 
                 <div class="device-card text-center" style="border-color: var(--brand-accent);">
-                    <div class="device-wireframe" style="background: rgba(139, 92, 246, 0.05); border-color: var(--brand-accent);">
-                        <svg width="48" height="48" fill="none" stroke="#6D28D9" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
+                    <div class="ill-stage" style="background: linear-gradient(180deg, #F5F3FF 0%, #FFFFFF 100%);">
+                        <div class="ill-hub">
+                            <div class="ill-hub-layer l1"></div>
+                            <div class="ill-hub-layer l2"></div>
+                            <div class="ill-hub-core">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                            </div>
+                            <div class="ill-hub-dot" style="top:0; left:50%"></div>
+                            <div class="ill-hub-dot" style="top:100%; left:50%"></div>
+                            <div class="ill-hub-dot" style="top:50%; left:0"></div>
+                            <div class="ill-hub-dot" style="top:50%; left:100%"></div>
+                        </div>
                     </div>
                     <h3>平台层</h3>
                     <div style="font-family:var(--font-mono); font-size:0.8rem; color:var(--brand-purple); margin:0.5rem 0;">ROLE: HUB</div>
@@ -415,12 +761,204 @@
                 </div>
 
                 <div class="device-card text-center">
-                    <div class="device-wireframe">
-                         <div class="wf-phone"></div>
+                    <div class="ill-stage">
+                        <div class="ill-phone">
+                            <div class="ill-phone-notch"></div>
+                            <div class="ill-phone-screen">
+                                <div class="ill-msg-bubble">
+                                    <div class="ill-msg-line"></div>
+                                    <div class="ill-msg-line short"></div>
+                                </div>
+                                <div class="ill-msg-bubble">
+                                    <div class="ill-msg-line"></div>
+                                    <div class="ill-msg-line short"></div>
+                                </div>
+                                <div class="ill-msg-bubble">
+                                    <div class="ill-msg-line"></div>
+                                    <div class="ill-msg-line short"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h3>手机端</h3>
                     <div style="font-family:var(--font-mono); font-size:0.8rem; color:var(--text-sub); margin:0.5rem 0;">ROLE: AGENT</div>
                     <p style="font-size:0.9rem;">支持聚焦变化、提醒与确认，辅助重要信息不被遗漏。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Selection Strategy -->
+    <section class="section" style="background: white;">
+        <div class="container">
+            <div class="text-center fade-up">
+                <div class="tech-label">CORE STRATEGY</div>
+                <h2>自定义选品策略与专家方法论</h2>
+                <p style="color:var(--text-sub); margin-top:10px;">不仅仅是工具，更是适配您业务模式的增长引擎</p>
+            </div>
+
+            <div class="grid-2 fade-up">
+                <!-- Left: Custom Strategy -->
+                <div class="tech-card" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="core-icon" style="width: 60px; height: 60px; font-size: 1.5rem; margin: 0 0 1.5rem 0; background: var(--brand-gradient);">🛠️</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">策略高度自定义</h3>
+                    <p style="color: var(--text-sub); margin-bottom: 1.5rem;">
+                        我们深知每个卖家的资金、供应链优势各不相同。因此，选品自动化流程中的核心策略参数完全开放配置。
+                    </p>
+                    <ul style="list-style: none; color: var(--text-sub); font-size: 0.95rem; display: flex; flex-direction: column; gap: 10px;">
+                        <li style="display: flex; align-items: center; gap: 10px;">
+                            <span style="width: 6px; height: 6px; background: var(--brand-accent); border-radius: 50%;"></span>
+                            根据利润率目标设定筛选阈值
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 10px;">
+                            <span style="width: 6px; height: 6px; background: var(--brand-accent); border-radius: 50%;"></span>
+                            自定义竞对分析范围与权重
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 10px;">
+                            <span style="width: 6px; height: 6px; background: var(--brand-accent); border-radius: 50%;"></span>
+                            灵活调整库存周转与备货逻辑
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right: Expert Methodology -->
+                <div class="tech-card" style="height: 100%; display: flex; flex-direction: column; justify-content: center; border-color: var(--brand-purple); background: linear-gradient(135deg, #F5F3FF 0%, #FFFFFF 100%);">
+                    <div class="core-icon" style="width: 60px; height: 60px; font-size: 1.5rem; margin: 0 0 1.5rem 0; background: var(--brand-gradient);">🎓</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">资深专家方法论</h3>
+                    <p style="color: var(--text-sub); margin-bottom: 1.5rem;">
+                        系统内置了由在行业内深耕多年的专业指导老师总结的选品模型，让您站在巨人的肩膀上起步。
+                    </p>
+                    <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 1px dashed var(--brand-purple);">
+                        <div style="font-weight: 700; color: var(--brand-purple); margin-bottom: 0.5rem;">专家金牌模型</div>
+                        <p style="font-size: 0.9rem; color: var(--text-sub);">
+                            融合了 50+ 头部大卖家的成功经验，经过多次实战验证，能够有效识别潜在爆款，降低试错成本。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Selection Mechanism Carousel -->
+    <section class="carousel-section">
+        <div class="container">
+            <div class="text-center fade-up" style="margin-bottom: 3rem;">
+                <div class="tech-label">MECHANISM</div>
+                <h2>选品机制展示</h2>
+                <p style="color:var(--text-sub); margin-top:10px;">基于实战经验的标准化筛选流程</p>
+            </div>
+
+            <div class="carousel-wrapper fade-up">
+                <button class="carousel-btn prev" id="prevBtn">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                
+                <div class="carousel-track-container">
+                    <div class="carousel-track" id="track">
+                        <!-- Slide 1 -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">📦</div>
+                            <h3 class="slide-title">物流形态优化</h3>
+                            <div class="slide-tag">COST CONTROL</div>
+                            <div class="slide-content">
+                                <p>重件不碰，体积压到最小可运输规格。优先“可压缩、可折叠、可拆分”的商品形态。</p>
+                                <p style="margin-top: 10px;"><strong>目标：</strong>不是便宜，而是运费稳定、交付确定。</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2 -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">🎯</div>
+                            <h3 class="slide-title">非标高频品类</h3>
+                            <div class="slide-tag">CATEGORY SELECTION</div>
+                            <div class="slide-content">
+                                <p>选非标但高频消耗的品类，避免强品牌、强 IP、强对比类目。</p>
+                                <p style="margin-top: 10px;"><strong>策略：</strong>不追爆款词，只吃长尾稳定需求。</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3 -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">⚓</div>
+                            <h3 class="slide-title">价格锚点测试</h3>
+                            <div class="slide-tag">PRICING STRATEGY</div>
+                            <div class="slide-content">
+                                <p>前期只做价格锚点 SKU：价格略低于类目均价，但不打到底，给系统留判断空间。</p>
+                                <p style="margin-top: 10px;"><strong>操作：</strong>所有商品独立卡片测试，不复制、不强行合并。</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4 -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">🔍</div>
+                            <h3 class="slide-title">搜索入口分叉</h3>
+                            <div class="slide-tag">TRAFFIC SOURCE</div>
+                            <div class="slide-content">
+                                <p>用标题与属性差异化制造“搜索入口分叉”，覆盖更多长尾关键词。</p>
+                                <p style="margin-top: 10px;"><strong>目的：</strong>最大化自然搜索流量的覆盖面。</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 5 -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">📊</div>
+                            <h3 class="slide-title">行为数据筛选</h3>
+                            <div class="slide-tag">DATA DRIVEN</div>
+                            <div class="slide-content">
+                                <p>观察 7–14 天行为数据：只看 曝光 → 点击 → 加购 → 首单，不看利润。</p>
+                                <p style="margin-top: 10px;"><strong>关注点：</strong>验证商品本身的市场吸引力。</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 6 -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">🏆</div>
+                            <h3 class="slide-title">赛马优胜劣汰</h3>
+                            <div class="slide-tag">OPTIMIZATION</div>
+                            <div class="slide-content">
+                                <p>跑通链路后：保留 1 个转化最稳的 SKU 作为核心卡，其余卡片逐步隐藏或清仓，不做长期维护。</p>
+                                <p style="margin-top: 10px;"><strong>结果：</strong>让系统确认这是一个“可持续成交的商品”。</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 7 (Mock) -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">📦</div>
+                            <h3 class="slide-title">智能分仓建议</h3>
+                            <div class="slide-tag">LOGISTICS</div>
+                            <div class="slide-content">
+                                <p>根据过往 30 天的地区订单分布，系统自动计算最优分仓方案，降低尾程物流成本。</p>
+                                <p style="margin-top: 10px;"><strong>效益：</strong>平均物流时效提升 2-3 天。</p>
+                            </div>
+                        </div>
+
+                        <!-- Slide 8 (Mock) -->
+                        <div class="carousel-slide">
+                            <button class="adopt-btn">采纳 +</button>
+                            <div class="slide-icon">💰</div>
+                            <h3 class="slide-title">汇率自动对冲</h3>
+                            <div class="slide-tag">FINANCE</div>
+                            <div class="slide-content">
+                                <p>实时监控卢布/人民币汇率波动，当波动超过阈值时自动调整前台售价，锁定利润。</p>
+                                <p style="margin-top: 10px;"><strong>风控：</strong>保障每单基础利润不被汇损吞噬。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-btn next" id="nextBtn">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+
+                <div class="carousel-nav" id="carouselNav">
+                    <!-- Dots generated by JS -->
                 </div>
             </div>
         </div>
@@ -434,14 +972,14 @@
             <p style="max-width: 600px; margin: 0 auto 2rem; color: var(--text-sub);">
                 平台年费包含：API 接口维护、每周模型迭代、数据存储成本以及 7x12h 技术支持。
             </p>
-            <a href="cooperation.html" style="color: var(--brand-purple); font-weight: 600; border-bottom: 2px solid var(--brand-purple);">
-                商务合作与服务条款 →
+            <a href="cooperation.html" style="display: inline-block; background: var(--text-main); color: white; padding: 0.8rem 2.5rem; border-radius: 50px; font-weight: 600; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                商务合作与服务条款
             </a>
         </div>
     </section>
 
     <footer style="padding: 2rem 5%; font-size: 0.85rem; color: var(--text-sub); text-align: center;">
-        © 2025 Ozon 掘金 PRO. All Systems Operational.<br><br>
+        © 2026 Ozon 掘金 PRO. All Systems Operational.<br><br>
         <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light); line-height: 1.6;">
             本网站内容用于介绍产品功能与支持方式<br>
             不构成运营成果或收益承诺<br>
@@ -464,6 +1002,7 @@
         const navMenu = document.querySelector('.nav-menu');
         if(mobileToggle && navMenu) {
             mobileToggle.addEventListener('click', () => {
+                mobileToggle.classList.toggle('active');
                 const isHidden = getComputedStyle(navMenu).display === 'none';
                 if(isHidden) {
                     navMenu.style.display = 'flex';
@@ -479,7 +1018,215 @@
                     navMenu.style.display = 'none';
                 }
             });
+            
+            // 点击菜单项后关闭移动端菜单
+            navMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileToggle.classList.remove('active');
+                    navMenu.style.display = 'none';
+                });
+            });
+            
+            // 点击外部区域关闭菜单（仅在移动端）
+            const nav = document.querySelector('nav');
+            document.addEventListener('click', (e) => {
+                // 只在移动端（窗口宽度 <= 768px）且菜单展开时执行关闭逻辑
+                const isMobile = window.innerWidth <= 768;
+                const isMenuVisible = getComputedStyle(navMenu).display !== 'none';
+                if (isMobile && isMenuVisible) {
+                    // 排除菜单、切换按钮和整个导航栏区域
+                    if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target) && !nav.contains(e.target)) {
+                        mobileToggle.classList.remove('active');
+                        navMenu.style.display = 'none';
+                    }
+                }
+            });
         }
+
+        /* --- Carousel Logic --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.getElementById('track');
+            if (!track) return;
+            
+            const slides = Array.from(track.children);
+            const nextButton = document.getElementById('nextBtn');
+            const prevButton = document.getElementById('prevBtn');
+            const dotsNav = document.getElementById('carouselNav');
+            
+            // Configuration
+            const getSlidesPerView = () => {
+                if (window.innerWidth <= 768) return 1;
+                if (window.innerWidth <= 1024) return 2;
+                return 3;
+            };
+            
+            let slideWidth = slides[0].getBoundingClientRect().width;
+            let gap = 20; // Matches CSS gap
+            let currentIndex = 0;
+            let autoPlayInterval;
+
+            // Initialize
+            const init = () => {
+                // Clear existing dots
+                dotsNav.innerHTML = '';
+                
+                // Re-calculate dimensions
+                slideWidth = slides[0].getBoundingClientRect().width;
+                
+                // Create dots
+                const slidesPerView = getSlidesPerView();
+                // Ensure we don't create negative amount of dots
+                const maxIndex = Math.max(0, slides.length - slidesPerView);
+                const numDots = slides.length - slidesPerView + 1; // Simplistic dot mapping for infinite-like feel or just simple sliding
+
+                // For simplicity in this non-infinite carousel:
+                // We have (total - visible + 1) possible starting positions.
+                // Let's just create dots for every slide for direct navigation, 
+                // but handle the boundary in moveToSlide.
+                
+                slides.forEach((_, i) => {
+                    // Only add dots for valid starting positions to avoid empty space at end
+                    if (i <= maxIndex) {
+                        const dot = document.createElement('div');
+                        dot.classList.add('carousel-dot');
+                        if (i === currentIndex) dot.classList.add('active');
+                        dotsNav.appendChild(dot);
+                        dot.addEventListener('click', () => {
+                            moveToSlide(i);
+                            resetAutoPlay();
+                        });
+                    }
+                });
+                
+                moveToSlide(currentIndex);
+                startAutoPlay();
+            };
+            
+            const getDots = () => Array.from(dotsNav.children);
+
+            const moveToSlide = (index) => {
+                 const slidesPerView = getSlidesPerView();
+                 const maxIndex = slides.length - slidesPerView;
+                 
+                 // Boundary checks
+                 if (index < 0) index = 0;
+                 if (index > maxIndex) index = maxIndex; // Stop at the end
+                 
+                 currentIndex = index;
+                 
+                 const amountToMove = (slideWidth + gap) * index;
+                 
+                 // Use requestAnimationFrame for smoother animation
+                 requestAnimationFrame(() => {
+                     track.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+                     track.style.transform = `translateX(-${amountToMove}px)`;
+                 });
+                 
+                 // Update dots
+                const dots = getDots();
+                dots.forEach(d => d.classList.remove('active'));
+                if(dots[index]) dots[index].classList.add('active');
+                
+                // Update active center slide
+                const centerOffset = Math.floor(slidesPerView / 2);
+                const centerIndex = index + centerOffset;
+                
+                slides.forEach((slide, i) => {
+                    slide.classList.remove('active-center');
+                    // For mobile (1 view), center is index.
+                    // For tablet (2 views), center is index or index+1 depending on preference, let's pick index.
+                    // For desktop (3 views), center is index + 1.
+                    
+                    if (slidesPerView === 3 && i === index + 1) {
+                         slide.classList.add('active-center');
+                    } else if (slidesPerView === 1 && i === index) {
+                         slide.classList.add('active-center');
+                    } else if (slidesPerView === 2 && i === index) {
+                         // For 2 items, maybe just highlight the first one or both? 
+                         // Let's highlight the first one as "primary"
+                         slide.classList.add('active-center');
+                    }
+                });
+
+                // Update buttons state
+                if (prevButton) {
+                    prevButton.style.opacity = index === 0 ? '0.5' : '1';
+                    prevButton.style.pointerEvents = index === 0 ? 'none' : 'auto';
+                }
+                
+                if (nextButton) {
+                    nextButton.style.opacity = index === maxIndex ? '0.5' : '1';
+                    nextButton.style.pointerEvents = index === maxIndex ? 'none' : 'auto';
+                }
+            };
+            
+            const startAutoPlay = () => {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(() => {
+                    const slidesPerView = getSlidesPerView();
+                    const maxIndex = slides.length - slidesPerView;
+                    
+                    if (currentIndex >= maxIndex) {
+                        moveToSlide(0);
+                    } else {
+                        moveToSlide(currentIndex + 1);
+                    }
+                }, 3000);
+            };
+
+            const resetAutoPlay = () => {
+                startAutoPlay();
+            };
+            
+            // Event Listeners
+            window.addEventListener('resize', () => {
+                // Debounce could be added here
+                slideWidth = slides[0].getBoundingClientRect().width;
+                // Re-init dots if view changes (e.g. desktop to mobile)
+                // For now just re-clamping index
+                moveToSlide(currentIndex);
+            });
+            
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    moveToSlide(currentIndex + 1);
+                    resetAutoPlay();
+                });
+            }
+            
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    moveToSlide(currentIndex - 1);
+                    resetAutoPlay();
+                });
+            }
+            
+            // Pause on hover
+            const carouselWrapper = document.querySelector('.carousel-wrapper');
+            if (carouselWrapper) {
+                carouselWrapper.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+                carouselWrapper.addEventListener('mouseleave', startAutoPlay);
+            }
+            
+            // Adopt Button Logic
+            const adoptBtns = document.querySelectorAll('.adopt-btn');
+            adoptBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent slide click/drag if any
+                    if (btn.classList.contains('adopted')) {
+                        btn.classList.remove('adopted');
+                        btn.innerHTML = '采纳 +';
+                    } else {
+                        btn.classList.add('adopted');
+                        btn.innerHTML = '已采纳 ✓';
+                    }
+                });
+            });
+
+            // Start
+            // Delay slightly to ensure layout is done
+            setTimeout(init, 100);
+        });
     </script>
 </body>
 </html>
