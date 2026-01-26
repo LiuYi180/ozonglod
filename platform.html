@@ -360,6 +360,12 @@
             padding: 0 20px;
         }
         
+        @media (max-width: 768px) {
+            .carousel-wrapper {
+                padding: 0 10px; /* 手机端减少左右padding，避免内容区域过窄 */
+            }
+        }
+        
         .carousel-track-container {
             overflow: hidden;
             width: 100%;
@@ -373,6 +379,13 @@
             padding: 40px 5px; 
             align-items: center;
             will-change: transform; /* Hardware acceleration hint */
+        }
+        
+        @media (max-width: 768px) {
+            .carousel-track {
+                padding: 20px 0; /* 手机端减少上下padding */
+                gap: 0; /* 手机端显示单张时不需要gap */
+            }
         }
         
         .carousel-slide {
@@ -393,6 +406,12 @@
             will-change: transform, opacity; /* Hardware acceleration hint */
             backface-visibility: hidden; /* Prevent flickering */
             position: relative; /* For absolute positioning of adopt button */
+        }
+        
+        @media (max-width: 768px) {
+            .carousel-slide {
+                min-width: 0; /* 移除最小宽度限制，允许在手机端完全自适应 */
+            }
         }
         
         .adopt-btn {
@@ -541,8 +560,17 @@
         }
         
         @media (max-width: 768px) {
-            .carousel-slide { flex: 0 0 100%; } /* 1 slide */
+            .carousel-slide { 
+                flex: 0 0 100%; /* 1 slide */
+                padding: 1.5rem; /* 手机端减少内边距 */
+            }
+            .carousel-slide.active-center {
+                transform: scale(1); /* 手机端不放大，避免内容超出视口 */
+            }
             .carousel-btn { display: none; } /* Hide buttons on mobile */
+            .carousel-section {
+                padding: 3rem 0; /* 手机端减少section的上下padding */
+            }
         }
 
     </style>
@@ -1064,6 +1092,11 @@
             let gap = 20; // Matches CSS gap
             let currentIndex = 0;
             let autoPlayInterval;
+            
+            // Get gap based on screen size
+            const getGap = () => {
+                return window.innerWidth <= 768 ? 0 : 20;
+            };
 
             // Initialize
             const init = () => {
@@ -1072,6 +1105,7 @@
                 
                 // Re-calculate dimensions
                 slideWidth = slides[0].getBoundingClientRect().width;
+                gap = getGap();
                 
                 // Create dots
                 const slidesPerView = getSlidesPerView();
@@ -1114,7 +1148,20 @@
                  
                  currentIndex = index;
                  
-                 const amountToMove = (slideWidth + gap) * index;
+                 // Update gap for current screen size
+                 gap = getGap();
+                 
+                 // Calculate movement amount
+                 let amountToMove = (slideWidth + gap) * index;
+                 
+                 // On mobile (single slide view), center the slide
+                 if (slidesPerView === 1) {
+                     const container = track.parentElement;
+                     const containerWidth = container.getBoundingClientRect().width;
+                     // Center offset: (container width - slide width) / 2
+                     const centerOffset = (containerWidth - slideWidth) / 2;
+                     amountToMove = (slideWidth + gap) * index - centerOffset;
+                 }
                  
                  // Use requestAnimationFrame for smoother animation
                  requestAnimationFrame(() => {
@@ -1182,6 +1229,7 @@
             window.addEventListener('resize', () => {
                 // Debounce could be added here
                 slideWidth = slides[0].getBoundingClientRect().width;
+                gap = getGap();
                 // Re-init dots if view changes (e.g. desktop to mobile)
                 // For now just re-clamping index
                 moveToSlide(currentIndex);

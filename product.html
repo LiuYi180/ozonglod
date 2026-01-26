@@ -526,6 +526,7 @@
         .css-mobile {
             width: 375px; 
             height: 812px; /* iPhone X 标准尺寸比例 375:812 */
+            aspect-ratio: 375 / 812; /* 锁定长宽比，防止被拉长 */
             background: #111; 
             border-radius: 40px;
             position: relative; 
@@ -540,12 +541,14 @@
         @media (max-width: 900px) {
             .css-mobile {
                 transform: scale(0.5);
+                aspect-ratio: 375 / 812; /* 锁定长宽比 */
             }
         }
         
         @media (max-width: 768px) {
             .css-mobile {
                 transform: scale(0.55);
+                aspect-ratio: 375 / 812; /* 锁定长宽比 */
             }
             .nav-menu a { font-size: 1.1rem; padding: 1.2rem 0; }
         }
@@ -553,6 +556,7 @@
         @media (max-width: 480px) {
             .css-mobile {
                 transform: scale(0.6);
+                aspect-ratio: 375 / 812; /* 锁定长宽比 */
             }
         }
         .mobile-screen { 
