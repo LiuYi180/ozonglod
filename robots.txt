@@ -1,0 +1,12 @@
+# robots.txt for Ozon 掘金 PRO
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /private/
+
+# Sitemap
+Sitemap: https://ozon-pro.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1

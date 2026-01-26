@@ -1,0 +1,685 @@
+/* ============================================
+   Ozon 掘金 PRO - 公共样式文件
+   渐变流体风格设计系统
+   ============================================ */
+
+/* --- 1. CSS变量定义（渐变流体风格） --- */
+:root {
+    /* 背景色 */
+    --bg-color: #FAFAFA;
+    --bg-dark: #0F0F1E;
+    
+    /* 文字颜色 */
+    --text-main: #111111;
+    --text-sub: #666666;
+    --text-light: #999999;
+    --text-white: #FFFFFF;
+    
+    /* 品牌色 - 粉色系（来自logo） */
+    --brand-pink: #FF6B9D;
+    --brand-pink-light: #FFB3D1;
+    --brand-pink-dark: #FF4A7C;
+    
+    /* 品牌色 - 蓝紫色系（原有主题） */
+    --brand-purple: #6D28D9;
+    --brand-purple-light: #8B5CF6;
+    --brand-purple-dark: #5B21B6;
+    
+    /* 渐变流体效果 */
+    --gradient-primary: linear-gradient(135deg, #FF6B9D 0%, #6D28D9 50%, #8B5CF6 100%);
+    --gradient-secondary: linear-gradient(135deg, #FFB3D1 0%, #8B5CF6 100%);
+    --gradient-accent: linear-gradient(135deg, #FF6B9D 0%, #6D28D9 100%);
+    --gradient-fluent: radial-gradient(circle at 30% 50%, rgba(255, 107, 157, 0.3) 0%, rgba(109, 40, 217, 0.2) 50%, rgba(139, 92, 246, 0.3) 100%);
+    
+    /* 流体动画渐变 */
+    --gradient-fluid-1: linear-gradient(135deg, #FF6B9D 0%, #6D28D9 100%);
+    --gradient-fluid-2: linear-gradient(135deg, #8B5CF6 0%, #FF6B9D 100%);
+    --gradient-fluid-3: linear-gradient(135deg, #6D28D9 0%, #FFB3D1 100%);
+    
+    /* 边框和阴影 */
+    --border-light: rgba(0, 0, 0, 0.08);
+    --border-gradient: linear-gradient(135deg, rgba(255, 107, 157, 0.3), rgba(109, 40, 217, 0.3));
+    --shadow-float: 0 20px 40px -10px rgba(255, 107, 157, 0.2);
+    --shadow-glow: 0 0 30px rgba(109, 40, 217, 0.3);
+    --shadow-pink: 0 10px 30px rgba(255, 107, 157, 0.25);
+    --shadow-purple: 0 10px 30px rgba(109, 40, 217, 0.25);
+    
+    /* 动画曲线 */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 字体 */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+}
+
+/* --- 2. 基础重置 --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-main);
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: relative;
+}
+
+/* 流体背景效果 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-fluent);
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+    animation: fluidBackground 20s ease-in-out infinite;
+}
+
+@keyframes fluidBackground {
+    0%, 100% {
+        background: radial-gradient(circle at 30% 50%, rgba(255, 107, 157, 0.3) 0%, rgba(109, 40, 217, 0.2) 50%, rgba(139, 92, 246, 0.3) 100%);
+    }
+    33% {
+        background: radial-gradient(circle at 70% 30%, rgba(109, 40, 217, 0.3) 0%, rgba(255, 107, 157, 0.2) 50%, rgba(139, 92, 246, 0.3) 100%);
+    }
+    66% {
+        background: radial-gradient(circle at 50% 70%, rgba(139, 92, 246, 0.3) 0%, rgba(255, 107, 157, 0.2) 50%, rgba(109, 40, 217, 0.3) 100%);
+    }
+}
+
+/* --- 3. 排版 --- */
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+
+p {
+    color: var(--text-sub);
+    margin-bottom: 1rem;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s var(--ease-out-expo);
+}
+
+/* --- 4. 导航栏 --- */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(250, 250, 250, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-light);
+    z-index: 999;
+    transition: all 0.3s var(--ease-out-expo);
+}
+
+nav.scrolled {
+    padding: 0.7rem 5%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    background: rgba(250, 250, 250, 0.95);
+}
+
+.nav-container {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-size: 1.2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-primary);
+    padding: 4px;
+}
+
+.brand-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-menu li {
+    position: relative;
+}
+
+.nav-menu a {
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 500;
+    white-space: nowrap;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gradient-primary);
+    transition: width 0.3s var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+    .nav-menu a:hover {
+        color: var(--brand-purple);
+    }
+    .nav-menu a:hover::after {
+        width: 100%;
+    }
+}
+
+.nav-menu a.active {
+    color: var(--brand-purple);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-menu a.active::after {
+    width: 100%;
+}
+
+/* 移动端菜单按钮 */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.mobile-menu-toggle span {
+    width: 24px;
+    height: 2px;
+    background: var(--text-main);
+    transition: all 0.3s var(--ease-out-expo);
+    border-radius: 2px;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+    background: var(--brand-purple);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+    background: var(--brand-purple);
+}
+
+/* --- 5. 容器和布局 --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+    position: relative;
+}
+
+.section {
+    padding: 6rem 0;
+    position: relative;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* --- 6. 技术标签（Tech Label）--- */
+.tech-label,
+.tech-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--brand-purple);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(255, 107, 157, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 0.8rem;
+    border: 1px solid rgba(255, 107, 157, 0.2);
+}
+
+.tech-label::before,
+.tech-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* --- 7. 动画类 --- */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal {
+    opacity: 0;
+    animation: revealUp 1s var(--ease-out-expo) forwards;
+}
+
+@keyframes revealUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.d-1 { animation-delay: 0.1s; }
+.d-2 { animation-delay: 0.2s; }
+.d-3 { animation-delay: 0.3s; }
+
+/* --- 8. 流体渐变效果 --- */
+.fluid-gradient {
+    position: relative;
+    background: var(--gradient-primary);
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.fluid-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+.fluid-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: var(--gradient-primary);
+    opacity: 0.1;
+    animation: fluidRotate 20s linear infinite;
+    border-radius: 50%;
+}
+
+@keyframes fluidRotate {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.1;
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0.15;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0.1;
+    }
+}
+
+/* --- 9. 按钮样式 --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-out-expo);
+    border: none;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow-pink);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-pink), 0 8px 25px rgba(255, 107, 157, 0.4);
+}
+
+.btn-outline {
+    border: 2px solid;
+    border-image: var(--gradient-primary) 1;
+    background: transparent;
+    color: var(--text-main);
+    position: relative;
+}
+
+.btn-outline::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+}
+
+.btn-outline:hover {
+    color: white;
+}
+
+.btn-outline:hover::after {
+    opacity: 1;
+}
+
+.btn-white {
+    background: white;
+    color: var(--text-main);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-white:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* --- 10. 卡片样式 --- */
+.card {
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 24px;
+    padding: 2rem;
+    transition: all 0.3s var(--ease-out-expo);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+}
+
+@media (hover: hover) {
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-float);
+        border-color: transparent;
+    }
+    
+    .card:hover::before {
+        opacity: 0.05;
+    }
+}
+
+.hud-card {
+    background: white;
+    border: 1px solid var(--border-light);
+    padding: 2rem;
+    position: relative;
+    transition: all 0.3s var(--ease-out-expo);
+}
+
+.hud-card .corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid;
+    border-image: var(--gradient-primary) 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.hud-card .corner.tl {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+.hud-card .corner.br {
+    bottom: -1px;
+    right: -1px;
+    border-left: 0;
+    border-top: 0;
+}
+
+@media (hover: hover) {
+    .hud-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--brand-purple);
+        box-shadow: var(--shadow-purple);
+    }
+    
+    .hud-card:hover .corner {
+        opacity: 1;
+    }
+}
+
+/* --- 11. 粒子背景 --- */
+.particles-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: float-particle 20s infinite ease-in-out;
+}
+
+@keyframes float-particle {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.2;
+    }
+    25% {
+        transform: translate(100px, -100px) scale(1.5);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translate(-50px, -200px) scale(0.8);
+        opacity: 0.3;
+    }
+    75% {
+        transform: translate(-100px, 100px) scale(1.2);
+        opacity: 0.35;
+    }
+}
+
+/* --- 12. 响应式设计 --- */
+@media (max-width: 900px) {
+    .section {
+        padding: 4rem 0;
+    }
+    
+    .container {
+        padding: 0 4%;
+    }
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 0.8rem 4%;
+    }
+    
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        padding: 2rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        gap: 0;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .nav-menu li {
+        width: 100%;
+    }
+    
+    .nav-menu a {
+        display: block;
+        padding: 1.2rem 0;
+        font-size: 1.1rem;
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .section {
+        padding: 3rem 0;
+    }
+    
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 3%;
+    }
+    
+    .btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* --- 13. 工具类 --- */
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+
+.text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
