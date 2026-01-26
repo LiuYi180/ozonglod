@@ -190,33 +190,51 @@
             display: flex; justify-content: center; align-items: center; height: 450px; position: relative;
         }
 
-        /* Pad Mockup - 与首页保持一致的专业设计 */
+        /* Pad Mockup - 横屏 16:9，参考分辨率 2000×1200，专业设计 */
         .css-pad {
-            width: 100%; max-width: 550px; height: 350px;
-            background: white; border: 12px solid #222; border-radius: 24px;
-            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.2);
-            position: relative; overflow: hidden; display: flex;
+            width: 100%; 
+            max-width: 1000px; 
+            height: auto; /* 由 aspect-ratio 自动计算 */
+            aspect-ratio: 16 / 9; /* 锁定横屏 16:9 长宽比 */
+            background: #1a1a1a; /* 更专业的深色边框 */
+            border-radius: 8px; /* 减少圆角，更专业 */
+            padding: 8px; 
+            margin: 0 auto;
+            position: relative; 
+            overflow: hidden; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); /* 更真实的阴影 */
+            border: 1px solid rgba(255,255,255,0.1); /* 添加边框 */
+        }
+        
+        .pad-screen {
+            background: #0f172a; 
+            width: 100%; 
+            height: 100%;
+            border-radius: 4px; /* 减少圆角，更专业 */
+            overflow: hidden; 
+            display: flex;
+            position: relative;
         }
         .pad-sidebar { 
-            width: 70px; 
+            width: 140px; /* 参考分辨率 2000×1200 下的尺寸 */
             background: #1e293b; 
             border-right: 1px solid #334155; 
-            padding-top: 20px; 
+            padding-top: 40px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            gap: 20px; 
+            gap: 40px; 
         }
         .pad-icon { 
-            width: 40px; 
-            height: 40px; 
+            width: 80px; /* 参考分辨率 2000×1200 下的尺寸 */
+            height: 80px; 
             background: #334155; 
-            border-radius: 10px; 
+            border-radius: 20px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             color: #94a3b8; 
-            font-size: 18px;
+            font-size: 36px;
             transition: all 0.2s;
         }
         .pad-icon.active { 
@@ -224,16 +242,30 @@
             color: white; 
         }
         .pad-main { 
-            flex: 1; 
+            width: 1860px; /* 2000 - 140 (侧边栏宽度) */
             padding: 0; 
             display: flex; 
             flex-direction: column; 
             overflow: hidden;
             background: #0f172a;
         }
+        
+        /* 样机内容缩放容器 - 参考分辨率 2000×1200，等比例缩放到样机尺寸 */
+        .pad-content-wrapper {
+            width: 2000px; /* 参考分辨率宽度 */
+            height: 1200px; /* 参考分辨率高度 */
+            transform-origin: top left;
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* 缩放比例由 JavaScript 动态计算，确保完整显示 */
+            display: flex;
+            flex-direction: row; /* 横向布局：侧边栏 + 主内容 */
+            background: #0f172a;
+        }
         .pad-header {
             background: #1e293b;
-            padding: 12px 18px;
+            padding: 30px 50px; /* 参考分辨率下的尺寸 */
             border-bottom: 1px solid #334155;
             display: flex;
             justify-content: space-between;
@@ -242,87 +274,87 @@
         .pad-header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 30px;
         }
         .pad-logo {
-            width: 28px;
-            height: 28px;
+            width: 64px; /* 参考分辨率下的尺寸 */
+            height: 64px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 6px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 28px;
         }
         .pad-search {
-            width: 200px;
-            height: 30px;
+            width: 560px; /* 参考分辨率下的尺寸 */
+            height: 72px;
             background: #0f172a;
             border: 1px solid #334155;
-            border-radius: 6px;
-            padding: 0 12px;
+            border-radius: 16px;
+            padding: 0 30px;
             color: #94a3b8;
-            font-size: 11px;
+            font-size: 26px;
         }
         .pad-header-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 30px;
         }
         .pad-notification {
-            width: 30px;
-            height: 30px;
+            width: 72px; /* 参考分辨率下的尺寸 */
+            height: 72px;
             background: #334155;
-            border-radius: 6px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #94a3b8;
             position: relative;
-            font-size: 14px;
+            font-size: 28px;
         }
         .pad-notification::after {
             content: '';
             position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 6px;
-            height: 6px;
+            top: 16px;
+            right: 16px;
+            width: 16px;
+            height: 16px;
             background: #ef4444;
             border-radius: 50%;
-            border: 2px solid #1e293b;
+            border: 4px solid #1e293b;
         }
         .pad-avatar {
-            width: 30px;
-            height: 30px;
+            width: 72px; /* 参考分辨率下的尺寸 */
+            height: 72px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 6px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 28px;
         }
         .pad-content {
             flex: 1;
-            padding: 15px;
+            padding: 50px; /* 参考分辨率下的尺寸 */
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 40px;
         }
         .pad-card-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 40px; /* 参考分辨率下的尺寸 */
         }
         .pad-card {
             background: #1e293b;
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 24px; /* 参考分辨率下的尺寸 */
+            padding: 40px; 
             border: 1px solid #334155;
             position: relative;
             overflow: hidden;
@@ -365,17 +397,17 @@
         }
         .pad-card-title {
             color: #94a3b8;
-            font-size: 9px;
+            font-size: 24px; /* 参考分辨率下的尺寸 */
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 24px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
         .pad-card-value {
             color: white;
-            font-size: 18px;
+            font-size: 56px; /* 参考分辨率下的尺寸 */
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 16px;
             line-height: 1.2;
             animation: padNumberPulse 2s ease-in-out infinite;
             display: inline-block;
@@ -405,8 +437,8 @@
         .pad-card-change {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 9px;
+            gap: 12px;
+            font-size: 24px; /* 参考分辨率下的尺寸 */
             font-weight: 500;
         }
         .pad-card-change.positive {
@@ -417,12 +449,12 @@
         }
         .pad-chart-area {
             background: #1e293b;
-            border-radius: 8px;
-            padding: 12px;
+            border-radius: 24px; /* 参考分辨率下的尺寸 */
+            padding: 40px;
             border: 1px solid #334155;
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 12px;
+            gap: 40px;
         }
         .pad-chart-main {
             display: flex;
@@ -430,9 +462,9 @@
         }
         .pad-chart-title {
             color: white;
-            font-size: 12px;
+            font-size: 32px; /* 参考分辨率下的尺寸 */
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 40px;
         }
         .chart-mock { 
             background: transparent; 
@@ -441,16 +473,16 @@
             position: relative; 
             display: flex; 
             align-items: flex-end; 
-            padding: 8px 0; 
-            gap: 6px; 
-            height: 100px;
+            padding: 20px 0; 
+            gap: 16px; /* 参考分辨率下的尺寸 */
+            height: 360px; /* 参考分辨率下的尺寸 */
         }
         .bar { 
             flex: 1; 
             background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); 
             opacity: 1; 
-            border-radius: 3px 3px 0 0; 
-            min-height: 15px;
+            border-radius: 8px 8px 0 0; /* 参考分辨率下的尺寸 */
+            min-height: 40px;
             animation: growBar 1s var(--ease-out-expo) forwards;
             height: 0;
             position: relative;
@@ -468,22 +500,22 @@
         .pad-chart-side {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 30px; /* 参考分辨率下的尺寸 */
         }
         .pad-mini-card {
             background: #0f172a;
             border: 1px solid #334155;
-            border-radius: 6px;
-            padding: 10px;
+            border-radius: 16px; /* 参考分辨率下的尺寸 */
+            padding: 30px;
         }
         .pad-mini-card-title {
             color: #94a3b8;
-            font-size: 8px;
-            margin-bottom: 6px;
+            font-size: 22px; /* 参考分辨率下的尺寸 */
+            margin-bottom: 16px;
         }
         .pad-mini-card-value {
             color: white;
-            font-size: 14px;
+            font-size: 40px; /* 参考分辨率下的尺寸 */
             font-weight: 700;
         }
         @keyframes growBar {
@@ -677,7 +709,15 @@
             .split-section.reverse .text-content { direction: ltr; }
             .mockup-wrapper { order: -1; height: 420px; padding: 0; }
             .pricing-grid { grid-template-columns: 1fr; }
-            .css-pad { max-width: 100%; height: 300px; }
+            /* 移动端：平板样机保持 16:9 比例，更专业的样式 */
+            .css-pad {
+                width: 100%;
+                max-width: 600px;
+                height: auto;
+                aspect-ratio: 16 / 9; /* 锁定 16:9 长宽比 */
+                border-radius: 6px;
+                padding: 6px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -808,13 +848,15 @@
                 <!-- Pure CSS Visual: Pad -->
                 <div class="mockup-wrapper">
                     <div class="css-pad">
-                        <div class="pad-sidebar">
-                            <div class="pad-icon active">📊</div>
-                            <div class="pad-icon">📦</div>
-                            <div class="pad-icon">📈</div>
-                            <div class="pad-icon">💰</div>
-                        </div>
-                        <div class="pad-main">
+                        <div class="pad-screen">
+                            <div class="pad-content-wrapper">
+                            <div class="pad-sidebar">
+                                <div class="pad-icon active">📊</div>
+                                <div class="pad-icon">📦</div>
+                                <div class="pad-icon">📈</div>
+                                <div class="pad-icon">💰</div>
+                            </div>
+                            <div class="pad-main">
                             <div class="pad-header">
                                 <div class="pad-header-left">
                                     <div class="pad-logo" style="background: transparent; padding: 0;">
@@ -890,6 +932,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
                             </div>
                         </div>
                     </div>
@@ -1386,6 +1430,51 @@
         
         // 每3秒更新一次数据数字
         setInterval(updatePadNumbers, 3000);
+        
+        // 6. 样机内容缩放：根据样机实际尺寸动态计算缩放比例（参考分辨率 2000×1200）
+        function updatePadContentScale() {
+            const pad = document.querySelector('.css-pad');
+            const contentWrapper = document.querySelector('.pad-content-wrapper');
+            if (!pad || !contentWrapper) return;
+            
+            // 获取样机的实际尺寸（考虑 padding）
+            const padRect = pad.getBoundingClientRect();
+            const padPadding = 8; // padding: 8px
+            const actualWidth = padRect.width - (padPadding * 2);
+            const actualHeight = padRect.height - (padPadding * 2);
+            
+            // 参考分辨率
+            const refWidth = 2000;
+            const refHeight = 1200;
+            
+            // 计算基础缩放比例
+            const baseScaleX = actualWidth / refWidth;
+            const baseScaleY = actualHeight / refHeight;
+            
+            // 使用较小的缩放比例，确保内容完整显示
+            const scale = Math.min(baseScaleX, baseScaleY);
+            
+            // 应用缩放
+            contentWrapper.style.transform = `scale(${scale})`;
+        }
+        
+        // 初始化缩放
+        updatePadContentScale();
+        window.addEventListener('resize', () => {
+            // 延迟执行内容缩放，确保样机尺寸已更新
+            setTimeout(updatePadContentScale, 100);
+        });
+        
+        // 使用 ResizeObserver 监听容器尺寸变化（更精确）
+        if (window.ResizeObserver) {
+            const resizeObserver = new ResizeObserver(() => {
+                setTimeout(updatePadContentScale, 100);
+            });
+            const pad = document.querySelector('.css-pad');
+            if (pad) {
+                resizeObserver.observe(pad);
+            }
+        }
     </script>
 </body>
 </html>

@@ -853,6 +853,7 @@
         .iphone {
             width: 375px; 
             height: 812px; /* iPhone X 标准尺寸比例 375:812 */
+            aspect-ratio: 375 / 812; /* 锁定长宽比，防止被拉长 */
             background: #111; 
             border-radius: 40px;
             position: absolute; 
@@ -1434,17 +1435,20 @@
         }
         
         /* 响应式调整：确保在小屏幕上UI仍然清晰 */
+        /* iPhone X 标准比例 375:812，使用 aspect-ratio 锁定长宽比 */
         @media (max-width: 768px) {
             .iphone {
                 width: 180px;
-                height: 360px;
+                height: auto; /* 由 aspect-ratio 自动计算 */
+                aspect-ratio: 375 / 812; /* 锁定正确的长宽比 */
             }
         }
         
         @media (max-width: 480px) {
             .iphone {
                 width: 160px;
-                height: 320px;
+                height: auto; /* 由 aspect-ratio 自动计算 */
+                aspect-ratio: 375 / 812; /* 锁定正确的长宽比 */
             }
         }
 
