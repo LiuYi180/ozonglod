@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "title": "Cross-Border E-commerce Platforms Logo Collection",
+    "description": "A collection of 59 SVG logos from global e-commerce platforms and related services",
+    "version": "1.0",
+    "lastUpdated": "2026-01-28",
+    "totalLogos": 59,
+    "format": "SVG",
+    "license": "CC0 1.0 Universal",
+    "source": "Simple Icons (https://simpleicons.org/)"
+  },
+  "categories": {
+    "ecommerce": {
+      "name": "E-commerce Platforms",
+      "logos": [
+        "alibabacloud.svg",
+        "alibabadotcom.svg",
+        "aliexpress.svg",
+        "taobao.svg",
+        "shopee.svg",
+        "blibli.svg",
+        "ebay.svg",
+        "etsy.svg",
+        "wish.svg",
+        "allegro.svg",
+        "zalando.svg",
+        "vinted.svg",
+        "rakuten.svg",
+        "rakutenkobo.svg"
+      ]
+    },
+    "platforms": {
+      "name": "E-commerce Platforms & Builders",
+      "logos": [
+        "shopify.svg",
+        "bigcommerce.svg",
+        "woocommerce.svg",
+        "prestashop.svg",
+        "shopware.svg",
+        "squarespace.svg",
+        "bigcartel.svg",
+        "sellfy.svg"
+      ]
+    },
+    "payment": {
+      "name": "Payment & Financial Services",
+      "logos": [
+        "paypal.svg",
+        "stripe.svg",
+        "square.svg",
+        "revolut.svg",
+        "wise.svg",
+        "paytm.svg",
+        "mercadopago.svg"
+      ]
+    },
+    "gaming": {
+      "name": "Gaming & Entertainment",
+      "logos": [
+        "steam.svg",
+        "epicgames.svg",
+        "gogdotcom.svg",
+        "itchdotio.svg",
+        "playstation.svg",
+        "ubisoft.svg"
+      ]
+    },
+    "social": {
+      "name": "Social Media & Content",
+      "logos": [
+        "facebook.svg",
+        "instagram.svg",
+        "tiktok.svg",
+        "youtube.svg",
+        "twitch.svg",
+        "reddit.svg",
+        "pinterest.svg",
+        "tumblr.svg"
+      ]
+    },
+    "crowdfunding": {
+      "name": "Crowdfunding & Creator Platforms",
+      "logos": [
+        "kickstarter.svg",
+        "gofundme.svg",
+        "patreon.svg",
+        "gumroad.svg",
+        "medium.svg",
+        "substack.svg"
+      ]
+    },
+    "web3": {
+      "name": "Web3 & NFT Platforms",
+      "logos": [
+        "opensea.svg",
+        "rarible.svg"
+      ]
+    },
+    "other": {
+      "name": "Other Services",
+      "logos": [
+        "discord.svg",
+        "appstore.svg",
+        "buymeacoffee.svg",
+        "instacart.svg",
+        "trustedshops.svg",
+        "cardmarket.svg",
+        "buysellads.svg",
+        "atlasos.svg"
+      ]
+    }
+  },
+  "platforms": [
+    {
+      "name": "Alibaba Cloud",
+      "file": "alibabacloud.svg",
+      "region": "China",
+      "type": "Cloud Services"
+    },
+    {
+      "name": "Alibaba.com",
+      "file": "alibabadotcom.svg",
+      "region": "China",
+      "type": "B2B E-commerce"
+    },
+    {
+      "name": "AliExpress",
+      "file": "aliexpress.svg",
+      "region": "China",
+      "type": "Cross-border E-commerce"
+    },
+    {
+      "name": "Taobao",
+      "file": "taobao.svg",
+      "region": "China",
+      "type": "E-commerce"
+    },
+    {
+      "name": "Shopee",
+      "file": "shopee.svg",
+      "region": "Southeast Asia",
+      "type": "E-commerce"
+    },
+    {
+      "name": "Blibli",
+      "file": "blibli.svg",
+      "region": "Southeast Asia",
+      "type": "E-commerce"
+    },
+    {
+      "name": "eBay",
+      "file": "ebay.svg",
+      "region": "Global",
+      "type": "Auction & E-commerce"
+    },
+    {
+      "name": "Etsy",
+      "file": "etsy.svg",
+      "region": "Global",
+      "type": "Handmade & Vintage"
+    },
+    {
+      "name": "Wish",
+      "file": "wish.svg",
+      "region": "Global",
+      "type": "Mobile Shopping"
+    },
+    {
+      "name": "Allegro",
+      "file": "allegro.svg",
+      "region": "Europe",
+      "type": "E-commerce"
+    },
+    {
+      "name": "Zalando",
+      "file": "zalando.svg",
+      "region": "Europe",
+      "type": "Fashion E-commerce"
+    },
+    {
+      "name": "Vinted",
+      "file": "vinted.svg",
+      "region": "Europe",
+      "type": "Second-hand Fashion"
+    },
+    {
+      "name": "Rakuten",
+      "file": "rakuten.svg",
+      "region": "Global",
+      "type": "E-commerce"
+    },
+    {
+      "name": "Shopify",
+      "file": "shopify.svg",
+      "region": "Global",
+      "type": "E-commerce Platform"
+    },
+    {
+      "name": "PayPal",
+      "file": "paypal.svg",
+      "region": "Global",
+      "type": "Payment Service"
+    },
+    {
+      "name": "Stripe",
+      "file": "stripe.svg",
+      "region": "Global",
+      "type": "Payment Gateway"
+    },
+    {
+      "name": "Discord",
+      "file": "discord.svg",
+      "region": "Global",
+      "type": "Community Platform"
+    }
+  ]
+}

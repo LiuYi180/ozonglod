@@ -368,7 +368,183 @@
         @media (hover: hover) {
             .btn-white:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.3); }
         }
-
+        
+        /* 平台发展愿景模块（跨境平台展示） */
+        .platform-vision {
+            background: radial-gradient(circle at 0 0, rgba(139, 92, 246, 0.06) 0%, transparent 55%);
+        }
+        
+        .platform-vision-header {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 3rem;
+        }
+        
+        .platform-vision-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .platform-vision-header p {
+            color: var(--text-sub);
+            line-height: 1.7;
+        }
+        
+        .platform-vision-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.25rem;
+        }
+        
+        .platform-badge {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid var(--border-light);
+            background: rgba(255,255,255,0.85);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .platform-badge span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+        }
+        
+        .platform-badge-current span {
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+        }
+        
+        .platform-badge-future span {
+            background: #eab308;
+            box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.2);
+        }
+        
+        .platform-ozon-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+        
+        .platform-ozon-logo-ring {
+            width: 90px;
+            height: 90px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 0, rgba(248, 113, 165, 0.8), rgba(59, 130, 246, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 10px rgba(248, 113, 165, 0.18), 0 20px 40px rgba(15, 23, 42, 0.25);
+        }
+        
+        .platform-ozon-logo-ring-inner {
+            width: 72px;
+            height: 72px;
+            border-radius: 999px;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .platform-ozon-logo-ring-inner img {
+            max-width: 60px;
+            max-height: 40px;
+        }
+        
+        .platform-ozon-text {
+            text-align: center;
+        }
+        
+        .platform-ozon-text-title {
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        
+        .platform-ozon-text-sub {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+        
+        .platform-logos-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+        
+        .platform-logo-item {
+            background: white;
+            border-radius: 999px;
+            padding: 0.55rem 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(15,23,42,0.04);
+            min-width: 0;
+        }
+        
+        @media (hover: hover) {
+            .platform-logo-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 24px rgba(15,23,42,0.08);
+                border-color: rgba(129, 140, 248, 0.7);
+            }
+        }
+        
+        .platform-logo-item img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        
+        .platform-logo-name {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+        
+        .platform-logo-tag {
+            margin-left: auto;
+            font-size: 0.7rem;
+            padding: 0.05rem 0.45rem;
+            border-radius: 999px;
+            border: 1px dashed var(--border-light);
+            color: #6b7280;
+            background: #f9fafb;
+            white-space: nowrap;
+        }
+        
+        .platform-logo-item.future .platform-logo-tag {
+            border-style: solid;
+            border-color: rgba(234, 179, 8, 0.7);
+            background: #fef9c3;
+            color: #92400e;
+        }
+        
+        @media (max-width: 900px) {
+            .platform-logos-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .platform-logos-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        
         @media (max-width: 900px) {
             .mission-wrapper { grid-template-columns: 1fr; }
             .principles-grid { grid-template-columns: 1fr; }
@@ -384,6 +560,366 @@
             .hero-desc { font-size: 1.15rem; }
             .hud-card { padding: 2.5rem; }
             .focus-item { padding: 2rem; }
+        }
+
+        /* --- REBORN VISION SECTION STYLES --- */
+        .platform-vision-reborn {
+            background: radial-gradient(circle at top, #020617 0%, #020617 35%, #020617 100%);
+            position: relative;
+            overflow: hidden;
+            color: white;
+            padding: 8rem 0;
+        }
+        
+        .vision-bg-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 1000px; height: 1000px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, rgba(15, 23, 42, 0) 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: pulse-glow 10s ease-in-out infinite;
+        }
+        
+        /* 背景星点与轨道线 */
+        .vision-stars {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255,255,255,0.18) 0, transparent 40%),
+                radial-gradient(circle at 80% 10%, rgba(96,165,250,0.22) 0, transparent 45%),
+                radial-gradient(circle at 15% 80%, rgba(251,191,36,0.18) 0, transparent 45%);
+            opacity: 0.55;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            animation: stars-fade 16s ease-in-out infinite alternate;
+        }
+        
+        .vision-orbits {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+        
+        .vision-orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 999px;
+            border: 1px dashed rgba(148, 163, 184, 0.25);
+            transform: translate(-50%, -50%);
+            animation: orbit-spin 40s linear infinite;
+        }
+        
+        .vision-orbit-ring:nth-child(1) {
+            width: 420px;
+            height: 420px;
+        }
+        
+        .vision-orbit-ring:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            animation-duration: 55s;
+            animation-direction: reverse;
+        }
+        
+        .vision-orbit-ring:nth-child(3) {
+            width: 780px;
+            height: 780px;
+            border-style: solid;
+            border-color: rgba(30, 64, 175, 0.35);
+            animation-duration: 80s;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
+        }
+        
+        @keyframes stars-fade {
+            0% { opacity: 0.3; transform: translate3d(0,0,0) scale(1); }
+            100% { opacity: 0.7; transform: translate3d(-10px, -6px, 0) scale(1.03); }
+        }
+        
+        @keyframes orbit-spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .vision-header {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .vision-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #22d3ee; /* Cyan */
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: inline-block;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            padding: 0.4em 1em;
+            border-radius: 99px;
+            background: rgba(34, 211, 238, 0.05);
+        }
+
+        .vision-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .highlight-ozon {
+            color: #3b82f6; /* Ozon Blue fallback */
+            background: linear-gradient(to right, #3b82f6, #f472b6); /* Blue to Pink */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .vision-desc {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .universe-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* CORE CARD */
+        .core-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3.2rem 2.4rem;
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+            animation: core-float 10s ease-in-out infinite;
+        }
+
+        .core-card:hover {
+            transform: translateY(-10px) scale(1.08);
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 35px 70px -18px rgba(129, 140, 248, 0.45);
+        }
+
+        .core-halo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .halo-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            animation: spin 10s linear infinite;
+        }
+
+        .halo-ring:nth-child(2) {
+            inset: -10px;
+            border-color: rgba(244, 114, 182, 0.2);
+            animation-direction: reverse;
+            animation-duration: 15s;
+        }
+        
+        .halo-ring:nth-child(3) {
+            inset: -20px;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            animation-duration: 20s;
+        }
+
+        .core-logo-img {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        .core-status {
+            font-family: var(--font-mono);
+            color: #4ade80; /* Green */
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 6px; height: 6px; background: #4ade80; border-radius: 50%;
+            box-shadow: 0 0 10px #4ade80;
+            animation: blink 2s infinite;
+        }
+
+        .core-subtitle {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .core-desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* ORBIT GRID */
+        .orbit-grid {
+            display: grid;
+            grid-auto-flow: row;
+            grid-template-columns: repeat(4, 150px);
+            gap: 1.5rem 1.5rem;
+            justify-content: flex-end;
+            width: 130%;
+            margin-left: auto;
+        }
+
+        .orbit-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            animation: orbit-float 12s ease-in-out infinite;
+        }
+
+        .orbit-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .orbit-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .orbit-item:hover::before {
+            transform: translateX(100%);
+        }
+
+        .orbit-item img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: grayscale(100%) opacity(0.7);
+            transition: 0.3s;
+        }
+
+        .orbit-item:hover img {
+            filter: grayscale(0%) opacity(1);
+            transform: scale(1.1);
+        }
+
+        .orbit-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+
+        .orbit-tag {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        /* 占位卡片：暂无具体 Logo 时使用 "!" 与 "？？？？"  */
+        .orbit-item.placeholder img {
+            display: none;
+        }
+        
+        .orbit-placeholder-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            border: 1px dashed rgba(148, 163, 184, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #e5e7eb;
+            font-size: 1.1rem;
+            text-shadow: 0 0 10px rgba(148, 163, 184, 0.8);
+        }
+        
+        /* 区域标签 */
+        .orbit-item.latam { border-top: 2px solid #fbbf24; }
+        .orbit-item.sea { border-top: 2px solid #f97316; }
+        .orbit-item.global { border-top: 2px solid #3b82f6; }
+        .orbit-item.niche { border-top: 2px solid #a855f7; }
+
+        /* 浮动动画：核心卡片与轨道平台轻微上下浮动，增加呼吸感 */
+        @keyframes core-float {
+            0%, 100% { transform: translateY(0) scale(1.04); }
+            50% { transform: translateY(-8px) scale(1.08); }
+        }
+
+        @keyframes orbit-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .orbit-item:nth-child(2n) {
+            animation-delay: 1.5s;
+        }
+
+        .orbit-item:nth-child(3n) {
+            animation-delay: 3s;
+        }
+
+        .orbit-item:nth-child(5n) {
+            animation-delay: 4.5s;
+        }
+
+        @media (max-width: 900px) {
+            .universe-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .vision-title { font-size: 2.5rem; }
+            .core-card { max-width: 400px; margin: 0 auto; }
         }
     </style>
 </head>
@@ -540,6 +1076,133 @@
                     <div>
                         <strong>可持续运行的平台化结构</strong>
                         <p style="font-size: 0.9rem; margin-top: 5px;">构建能够随着市场变化而自我迭代的底层架构。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4.5 Platform Vision (Reborn) -->
+    <section class="platform-vision-reborn">
+        <div class="vision-bg-glow"></div>
+        <div class="vision-stars"></div>
+        <div class="vision-orbits">
+            <div class="vision-orbit-ring"></div>
+            <div class="vision-orbit-ring"></div>
+            <div class="vision-orbit-ring"></div>
+        </div>
+        <div class="container">
+            <div class="vision-header fade-up">
+                <span class="vision-tag">STRATEGIC_EXPANSION</span>
+                <h2 class="vision-title">从 <span class="highlight-ozon">Ozon</span> 出发<br>连接全球跨境生态</h2>
+                <p class="vision-desc">
+                    我们的核心架构始于 Ozon，但绝不止步于此。<br>
+                    构建可复用的跨境电商操作系统，逐步点亮全球版图。
+                </p>
+            </div>
+
+            <div class="universe-grid">
+                <!-- CORE SYSTEM: OZON -->
+                <div class="core-card fade-up">
+                    <div class="core-halo">
+                        <div class="halo-ring"></div>
+                        <div class="halo-ring"></div>
+                        <div class="halo-ring"></div>
+                        <img src="ecommerce_logos 2/ozon_logo.svg" alt="Ozon" class="core-logo-img">
+                    </div>
+                    <div class="core-status">
+                        <span class="status-dot"></span>
+                        SYSTEM ACTIVE
+                    </div>
+                    <h3 class="core-subtitle">Ozon Core Engine</h3>
+                    <p class="core-desc">
+                        当前深度支持平台<br>
+                        全链路数据与策略模型
+                    </p>
+                </div>
+
+                <!-- ORBIT SYSTEMS: FUTURE -->
+                <div class="orbit-grid fade-up" style="transition-delay: 0.1s;">
+                    <!-- Mercado Libre -->
+                    <div class="orbit-item latam">
+                        <img src="ecommerce_logos 2/美客多logo.png" alt="Mercado Libre">
+                        <span class="orbit-name">Mercado Libre</span>
+                        <span class="orbit-tag">LATAM</span>
+                    </div>
+
+                    <!-- Shopee -->
+                    <div class="orbit-item sea">
+                        <img src="ecommerce_logos 2/shopee.svg" alt="Shopee">
+                        <span class="orbit-name">Shopee</span>
+                        <span class="orbit-tag">SEA</span>
+                    </div>
+
+                    <!-- eBay -->
+                    <div class="orbit-item global">
+                        <img src="ecommerce_logos 2/ebay.svg" alt="eBay">
+                        <span class="orbit-name">eBay</span>
+                        <span class="orbit-tag">GLOBAL</span>
+                    </div>
+
+                    <!-- Etsy -->
+                    <div class="orbit-item niche">
+                        <img src="ecommerce_logos 2/etsy.svg" alt="Etsy">
+                        <span class="orbit-name">Etsy</span>
+                        <span class="orbit-tag">NICHE</span>
+                    </div>
+
+                    <!-- Rakuten -->
+                    <div class="orbit-item global">
+                        <img src="ecommerce_logos 2/rakuten.svg" alt="Rakuten">
+                        <span class="orbit-name">Rakuten</span>
+                        <span class="orbit-tag">JAPAN</span>
+                    </div>
+
+                    <!-- Rakuten Kobo -->
+                    <div class="orbit-item niche">
+                        <img src="ecommerce_logos 2/rakutenkobo.svg" alt="Rakuten Kobo">
+                        <span class="orbit-name">Kobo</span>
+                        <span class="orbit-tag">CONTENT</span>
+                    </div>
+
+                    <!-- Blibli -->
+                    <div class="orbit-item sea">
+                        <img src="ecommerce_logos 2/blibli.svg" alt="Blibli">
+                        <span class="orbit-name">Blibli</span>
+                        <span class="orbit-tag">INDONESIA</span>
+                    </div>
+
+                    <!-- Zalando -->
+                    <div class="orbit-item global">
+                        <img src="ecommerce_logos 2/zalando.svg" alt="Zalando">
+                        <span class="orbit-name">Zalando</span>
+                        <span class="orbit-tag">FASHION</span>
+                    </div>
+
+                    <!-- Vinted -->
+                    <div class="orbit-item niche">
+                        <img src="ecommerce_logos 2/vinted.svg" alt="Vinted">
+                        <span class="orbit-name">Vinted</span>
+                        <span class="orbit-tag">RESALE</span>
+                    </div>
+
+                    <!-- Wish -->
+                    <div class="orbit-item global">
+                        <img src="ecommerce_logos 2/wish.svg" alt="Wish">
+                        <span class="orbit-name">Wish</span>
+                        <span class="orbit-tag">MOBILE</span>
+                    </div>
+
+                    <!-- 占位平台：暂未确定或未来待补充的平台，用 ! 和 ？？？？ 表示 -->
+                    <div class="orbit-item global placeholder">
+                        <div class="orbit-placeholder-icon">!</div>
+                        <span class="orbit-name">？？？？</span>
+                        <span class="orbit-tag">COMING_SOON</span>
+                    </div>
+                    <div class="orbit-item sea placeholder">
+                        <div class="orbit-placeholder-icon">!</div>
+                        <span class="orbit-name">？？？？</span>
+                        <span class="orbit-tag">COMING_SOON</span>
                     </div>
                 </div>
             </div>

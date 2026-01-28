@@ -1,0 +1,152 @@
+{
+  "regions": [
+    {
+      "region": "China",
+      "name": "中国",
+      "latitude": 35.8617,
+      "longitude": 104.1954,
+      "platforms": [
+        {
+          "name": "Alibaba Cloud",
+          "file": "alibabacloud.svg",
+          "color": "#FF6B6B"
+        },
+        {
+          "name": "Alibaba.com",
+          "file": "alibabadotcom.svg",
+          "color": "#FF8C42"
+        },
+        {
+          "name": "AliExpress",
+          "file": "aliexpress.svg",
+          "color": "#E74C3C"
+        },
+        {
+          "name": "Taobao",
+          "file": "taobao.svg",
+          "color": "#F39C12"
+        }
+      ]
+    },
+    {
+      "region": "Southeast Asia",
+      "name": "东南亚",
+      "latitude": 3.1957,
+      "longitude": 101.6869,
+      "platforms": [
+        {
+          "name": "Shopee",
+          "file": "shopee.svg",
+          "color": "#FF6B6B"
+        },
+        {
+          "name": "Blibli",
+          "file": "blibli.svg",
+          "color": "#3498DB"
+        },
+        {
+          "name": "Paytm",
+          "file": "paytm.svg",
+          "color": "#2E86AB"
+        }
+      ]
+    },
+    {
+      "region": "Europe",
+      "name": "欧洲",
+      "latitude": 54.5260,
+      "longitude": 15.2551,
+      "platforms": [
+        {
+          "name": "Allegro",
+          "file": "allegro.svg",
+          "color": "#FF6B6B"
+        },
+        {
+          "name": "Zalando",
+          "file": "zalando.svg",
+          "color": "#9B59B6"
+        },
+        {
+          "name": "Vinted",
+          "file": "vinted.svg",
+          "color": "#1ABC9C"
+        }
+      ]
+    },
+    {
+      "region": "Global",
+      "name": "全球平台",
+      "latitude": 20.0,
+      "longitude": -100.0,
+      "platforms": [
+        {
+          "name": "eBay",
+          "file": "ebay.svg",
+          "color": "#E74C3C"
+        },
+        {
+          "name": "Etsy",
+          "file": "etsy.svg",
+          "color": "#F1C40F"
+        },
+        {
+          "name": "Wish",
+          "file": "wish.svg",
+          "color": "#3498DB"
+        },
+        {
+          "name": "Rakuten",
+          "file": "rakuten.svg",
+          "color": "#E74C3C"
+        }
+      ]
+    },
+    {
+      "region": "Payment",
+      "name": "支付平台",
+      "latitude": 40.7128,
+      "longitude": -74.0060,
+      "platforms": [
+        {
+          "name": "PayPal",
+          "file": "paypal.svg",
+          "color": "#003087"
+        },
+        {
+          "name": "Stripe",
+          "file": "stripe.svg",
+          "color": "#635BFF"
+        },
+        {
+          "name": "Square",
+          "file": "square.svg",
+          "color": "#3D3D3D"
+        }
+      ]
+    },
+    {
+      "region": "Gaming",
+      "name": "游戏平台",
+      "latitude": 47.6062,
+      "longitude": -122.3321,
+      "platforms": [
+        {
+          "name": "Steam",
+          "file": "steam.svg",
+          "color": "#1B2838"
+        },
+        {
+          "name": "Epic Games",
+          "file": "epicgames.svg",
+          "color": "#313131"
+        },
+        {
+          "name": "PlayStation",
+          "file": "playstation.svg",
+          "color": "#003087"
+        }
+      ]
+    }
+  ]
+}
