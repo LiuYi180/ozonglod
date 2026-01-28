@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ozon 掘金 PRO</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
         /* --- 0. 全局定义与变量 --- */
         :root {
@@ -509,8 +510,8 @@
         /* 实际样机组，固定宽度，通过 transform scale 适配 */
         .device-group {
             position: relative;
-            width: 900px; /* 固定绘图基准宽度 */
-            height: 500px;
+            width: 1200px; /* 调整为适应平板和手机 */
+            height: 700px;
             transform-origin: center center;
             /* 默认缩放，根据JS或媒体查询调整 */
         }
@@ -520,351 +521,482 @@
             .device-stage-wrapper {
                 height: 500px;
             }
-            .iphone {
-                transform: rotate(-5deg) scale(0.65);
-            }
         }
         
         @media (max-width: 768px) {
-            /* 移动端隐藏平板和手机样机 */
+            /* 移动端：放弃 3D 舞台整体缩放，改为上下堆叠的平板 + 大号手机样机 */
             .device-stage-wrapper {
-                display: none;
+                height: auto;
+                padding: 2rem 0 1rem;
+            }
+            .device-group {
+                width: 100%;
+                height: auto;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 1.5rem;
+                transform: none;           /* 由 CSS 控制，不再整体 scale */
+            }
+            .tablet-scene {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                width: min(100%, 520px);
+                height: auto;
+                aspect-ratio: 820 / 580;
+            }
+            /* 移动端下，只展示一个大号手机样机，垂直居中堆叠在平板下方 */
+            .iphone {
+                position: relative;
+                display: block;
+                width: min(100%, 340px);
+                height: auto;
+                aspect-ratio: 375 / 812;
+                bottom: auto;
+                right: auto;
+                margin: 0 auto 0.5rem;
+                transform: none;
+                transform-origin: center bottom;
             }
         }
         
         @media (max-width: 480px) {
-            /* 移动端隐藏平板和手机样机 */
+            /* 小屏移动端 */
             .device-stage-wrapper {
-                display: none;
+                height: 400px;
+            }
+            .device-group {
+                height: 400px;
+            }
+            .tablet-scene {
+                max-width: 90%;
             }
         }
 
-        /* Laptop Drawing */
-        .laptop {
-            width: 800px; height: 500px;
-            background: #e2e8f0; border-radius: 24px;
-            padding: 12px; margin: 0 auto;
-            position: absolute; left: 50px; top: 0;
-            transform: rotateX(10deg);
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        .laptop-screen {
-            background: #0f172a; width: 100%; height: 100%;
-            border-radius: 16px; overflow: hidden; display: flex;
-        }
-
-        .ui-sidebar { 
-            width: 70px; 
-            background: #1e293b; 
-            height: 100%; 
-            border-right: 1px solid #334155; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding-top: 20px; 
-            gap: 20px;
-        }
-        .sidebar-icon { 
-            width: 40px; 
-            height: 40px; 
-            background: #334155; 
-            border-radius: 10px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: #94a3b8; 
-            font-size: 18px;
-            transition: all 0.2s;
-        }
-        .sidebar-icon.active { 
-            background: #667eea; 
-            color: white; 
-        }
-        .ui-main { 
-            flex: 1; 
-            padding: 0; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden;
-        }
-        .ui-header {
-            background: #1e293b;
-            padding: 15px 25px;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .ui-header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .ui-logo {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .ui-search {
-            width: 280px;
-            height: 36px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 0 15px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-        .ui-header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .ui-notification {
-            width: 36px;
-            height: 36px;
-            background: #334155;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            position: relative;
-        }
-        .ui-notification::after {
-            content: '';
+        /* --- 平板样机样式 --- */
+        .tablet-scene {
+            width: 820px;
+            height: 580px;
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 8px;
-            height: 8px;
-            background: #ef4444;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transform-style: preserve-3d;
+            perspective: 2000px;
+        }
+
+        /* 手机端下，适当减薄平板边框与内屏圆角，让视觉更精致 */
+        @media (max-width: 768px) {
+            .tablet-face-front {
+                padding: 10px;
+                border-radius: 32px;
+            }
+            .tablet-screen-glass {
+                border-radius: 24px;
+            }
+        }
+
+        /* 动态阴影 */
+        .tablet-floor-shadow {
+            position: absolute;
+            width: 80%;
+            height: 20%;
+            bottom: -80px;
+            left: 10%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.4) 0%, transparent 70%);
+            transform: rotateX(90deg) translateZ(0px);
+            opacity: 0;
+            filter: blur(20px);
+            transition: opacity 0.5s;
+            z-index: -1;
+        }
+
+        /* 平板容器 */
+        .tablet {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        /* 通用面材质 */
+        .tablet-face {
+            position: absolute;
+            background-color: #151516;
+            backface-visibility: hidden;
+        }
+
+        /* 噪点纹理 */
+        .tablet-texture-layer {
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyNTAnIGhlaWdodD0nMjUwJz48ZmlsdGVyIGlkPSdub2lzZSc+PGZlVHVyYnVsZW5jZSB0eXBlPSdmcmFjdGFsTm9pc2UnIGJhc2VGcmVxdWVuY3k9JzAuOScgbnVtT2N0YXZlcz0nMycgc3RpdGNoVGlsZXM9J3N0aXRjaCcvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlXI9J3VybCgjbm9pc2UpJyBvcGFjaXR5PScwLjA2Jy8+PC9zdmc+');
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* 背面 */
+        .tablet-face-back {
+            width: 100%;
+            height: 100%;
+            border-radius: 40px;
+            transform: rotateY(180deg) translateZ(8px);
+            background: linear-gradient(135deg, #222 0%, #111 100%);
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 0 1px rgba(255,255,255,0.08),
+                inset 2px 2px 4px rgba(255,255,255,0.05);
+        }
+
+        /* 动态光泽带 */
+        .tablet-sheen-layer {
+            position: absolute;
+            inset: -50%;
+            background: linear-gradient(
+                105deg,
+                transparent 40%,
+                rgba(255,255,255,0.03) 45%,
+                rgba(255,255,255,0.1) 48%,
+                rgba(255,255,255,0.03) 55%,
+                transparent 60%
+            );
+            transform: rotate(15deg);
+            opacity: 0.8;
+            mix-blend-mode: color-dodge;
+        }
+
+        /* 摄像头模组 */
+        .tablet-camera-bump {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(145deg, #1f1f1f, #0d0d0d);
+            border-radius: 22px;
+            box-shadow: 
+                -1px -1px 2px rgba(255,255,255,0.1),
+                5px 5px 10px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 手机端下，整体缩小摄像头与 UI 细节比例，让画面不显得“放大裁切” */
+        @media (max-width: 768px) {
+            .tablet-camera-bump {
+                top: 18px;
+                right: 18px;
+                width: 72px;
+                height: 72px;
+                border-radius: 18px;
+            }
+            .tablet-lens-ring {
+                width: 42px;
+                height: 42px;
+            }
+            .tablet-ui-sidebar {
+                width: 72px;
+                padding: 22px 0;
+            }
+            .tablet-ui-logo {
+                width: 38px;
+                height: 38px;
+                margin-bottom: 28px;
+            }
+            .tablet-ui-content {
+                padding: 22px;
+                gap: 18px;
+            }
+            .tablet-stat-card {
+                height: 90px;
+                padding: 16px;
+            }
+            .tablet-stat-val {
+                font-size: 22px;
+            }
+        }
+        
+        .tablet-lens-ring {
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: 2px solid #1e293b;
-        }
-        .ui-avatar {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .ui-content {
-            flex: 1;
-            padding: 25px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .ui-card-row { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 20px; 
-        }
-        .ui-card { 
-            background: #1e293b; 
-            border-radius: 12px; 
-            padding: 20px; 
-            border: 1px solid #334155;
-            position: relative; 
-            overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: cardFloat 8s infinite;
-        }
-        .ui-card:nth-child(1) {
-            animation-delay: 0s;
-        }
-        .ui-card:nth-child(2) {
-            animation-delay: 2s;
-        }
-        .ui-card:nth-child(3) {
-            animation-delay: 4s;
-        }
-        .ui-card:nth-child(4) {
-            animation-delay: 6s;
-        }
-        @keyframes cardFloat {
-            0%, 100% {
-                transform: translateY(0);
-                border-color: #334155;
-                box-shadow: 0 0 0 rgba(102, 126, 234, 0);
-            }
-            5% {
-                transform: translateY(-8px) scale(1.02);
-                border-color: #667eea;
-                box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-            }
-            20% {
-                transform: translateY(-8px) scale(1.02);
-                border-color: #667eea;
-                box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-            }
-            25% {
-                transform: translateY(0);
-                border-color: #334155;
-                box-shadow: 0 0 0 rgba(102, 126, 234, 0);
-            }
-        }
-        @media (hover: hover) {
-            .ui-card:hover {
-                border-color: #667eea;
-                transform: translateY(-2px);
-                animation-play-state: paused;
-            }
-        }
-        .ui-card-title {
-            color: #94a3b8;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .ui-card-value {
-            color: white;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            line-height: 1.2;
-            animation: numberPulse 2s ease-in-out infinite;
-            display: inline-block;
-        }
-        .ui-card:nth-child(1) .ui-card-value {
-            animation-delay: 0s;
-        }
-        .ui-card:nth-child(2) .ui-card-value {
-            animation-delay: 0.5s;
-        }
-        .ui-card:nth-child(3) .ui-card-value {
-            animation-delay: 1s;
-        }
-        .ui-card:nth-child(4) .ui-card-value {
-            animation-delay: 1.5s;
-        }
-        @keyframes numberPulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.05);
-                opacity: 0.95;
-            }
-        }
-        .ui-card-change {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .ui-card-change.positive {
-            color: #10b981;
-        }
-        .ui-card-change.negative {
-            color: #ef4444;
-        }
-        .ui-chart-area {
-            background: #1e293b;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #334155;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-        .ui-chart-main {
-            display: flex;
-            flex-direction: column;
-        }
-        .ui-chart-title {
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-        .chart-bars {
-            display: flex; 
-            align-items: flex-end; 
-            gap: 8px; 
-            height: 180px;
-            padding: 10px 0;
-        }
-        .bar { 
-            flex: 1; 
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); 
-            border-radius: 4px 4px 0 0; 
-            animation: growBar 1s var(--ease-out-expo) forwards; 
-            height: 0;
-            min-height: 20px;
+            border: 1px solid #333;
+            background: radial-gradient(circle at 70% 30%, #444, #000);
             position: relative;
+            box-shadow: inset 0 0 6px #000;
         }
-        .bar::after {
+
+        .tablet-lens-glass {
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(30, 60, 100, 0.4), black 60%);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+            overflow: hidden;
+        }
+
+        .tablet-lens-glass::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 30%;
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px 4px 0 0;
+            width: 6px;
+            height: 4px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            top: 12px;
+            left: 10px;
+            filter: blur(1px);
         }
-        .ui-chart-side {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+
+        .tablet-lens-glass::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0,0,255,0.1));
         }
-        .ui-mini-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 15px;
-        }
-        .ui-mini-card-title {
-            color: #94a3b8;
-            font-size: 11px;
-            margin-bottom: 8px;
-        }
-        .ui-mini-card-value {
-            color: white;
+
+        .tablet-brand-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             font-size: 20px;
             font-weight: 700;
+            color: #333;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.05);
         }
-        @keyframes growBar {
-            to { height: var(--h, 60%); }
+
+        /* 侧面 */
+        .tablet-face-top {
+            width: calc(100% - 60px);
+            height: 16px;
+            top: -8px;
+            left: 30px;
+            transform: rotateX(90deg);
+            background: #222;
+        }
+
+        .tablet-face-bottom {
+            width: calc(100% - 60px);
+            height: 16px;
+            bottom: -8px;
+            left: 30px;
+            transform: rotateX(-90deg);
+            background: #111;
+        }
+
+        .tablet-face-left {
+            width: 16px;
+            height: calc(100% - 60px);
+            left: -8px;
+            top: 30px;
+            transform: rotateY(-90deg);
+            background: #1a1a1a;
+        }
+
+        .tablet-face-right {
+            width: 16px;
+            height: calc(100% - 60px);
+            right: -8px;
+            top: 30px;
+            transform: rotateY(90deg);
+            background: #1a1a1a;
+        }
+
+        .tablet-face-top::after,
+        .tablet-face-right::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+        }
+
+        /* 圆角填补 */
+        .tablet-corner-filler {
+            position: absolute;
+            inset: 2px;
+            background: #0a0a0a;
+            border-radius: 38px;
+            transform: translateZ(0);
+            box-shadow: 0 0 0 6px #111;
+        }
+
+        /* 正面 */
+        .tablet-face-front {
+            width: 100%;
+            height: 100%;
+            transform: translateZ(8px);
+            border-radius: 40px;
+            background: #000;
+            padding: 14px;
+            box-shadow: inset 0 0 0 1px #333;
+        }
+
+        .tablet-screen-glass {
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            border-radius: 28px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        /* 强烈的玻璃反光 */
+        .tablet-glass-reflection {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(120deg, transparent 45%, rgba(255,255,255,0.7) 50%, transparent 55%);
+            transform: rotate(25deg);
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: overlay;
+        }
+
+        /* 平板UI系统 */
+        .tablet-ui-container {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            display: flex;
+        }
+
+        /* 平板内部 UI 在手机端做整体等比缩放，保证内容完整展示 */
+        @media (max-width: 768px) {
+            .tablet-ui-container {
+                transform-origin: center center;
+                /* 先压缩一点避免四周被边框裁切，再由外层 .tablet-scene 控制整体大小 */
+                transform: scale(0.9);
+            }
+        }
+
+        .tablet-ui-sidebar {
+            width: 90px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        .tablet-ui-logo {
+            width: 44px;
+            height: 44px;
+            background: #2563eb;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        .tablet-ui-content {
+            flex: 1;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* 顶部卡片 */
+        .tablet-ui-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .tablet-stat-card {
+            flex: 1;
+            height: 110px;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid #fff;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .tablet-stat-val {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .tablet-stat-lbl {
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        /* 图表区 */
+        .tablet-ui-chart {
+            flex: 2;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            padding: 24px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        .tablet-chart-col {
+            width: 10%;
+            background: #eff6ff;
+            border-radius: 6px 6px 0 0;
+            position: relative;
+            height: 100%;
+        }
+
+        .tablet-col-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(to top, #2563eb, #60a5fa);
+            border-radius: 6px 6px 0 0;
+            height: 0%;
+            transition: height 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
         }
 
         /* iPhone Drawing - 375*812 等比缩放 */
         .iphone {
-            width: 375px; 
-            height: 812px; /* iPhone X 标准尺寸比例 375:812 */
+            /* 在桌面端以约 260px 宽展示，后续通过 .device-group 统一等比缩放 */
+            width: 260px; 
+            height: auto; /* 由 aspect-ratio 控制高度 */
             aspect-ratio: 375 / 812; /* 锁定长宽比，防止被拉长 */
             background: #111; 
             border-radius: 40px;
             position: absolute; 
-            bottom: -30px; 
-            right: 20px;
+            bottom: 20px; /* 往上移动，避免被下方板块遮挡 */
+            right: -400px; /* 初始位置在右侧外面 */
             border: 8px solid #333;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             z-index: 20;
-            transform: rotate(-5deg) scale(0.45); /* 等比缩放45%以适应容器 */
+            /* 仅做轻微旋转，具体缩放交由 .device-group 的 JS 统一控制 */
+            transform: rotate(-5deg);
             transform-origin: center bottom;
             overflow: hidden;
+            display: block; /* 确保默认显示 */
+            opacity: 0; /* 初始状态完全不可见 */
+            visibility: hidden; /* 初始状态完全隐藏 */
         }
 
         .iphone-screen { 
@@ -1438,17 +1570,19 @@
         /* iPhone X 标准比例 375:812，使用 aspect-ratio 锁定长宽比 */
         @media (max-width: 768px) {
             .iphone {
-                width: 180px;
+                width: 200px;
                 height: auto; /* 由 aspect-ratio 自动计算 */
                 aspect-ratio: 375 / 812; /* 锁定正确的长宽比 */
+                display: block !important; /* 确保移动端显示 */
             }
         }
         
         @media (max-width: 480px) {
             .iphone {
-                width: 160px;
+                width: 180px;
                 height: auto; /* 由 aspect-ratio 自动计算 */
                 aspect-ratio: 375 / 812; /* 锁定正确的长宽比 */
+                display: block !important; /* 确保移动端显示 */
             }
         }
 
@@ -1954,13 +2088,30 @@
             .isometric-stack { width: 220px; height: 220px; }
             
             /* 样机容器高度调整 */
-            .device-stage-wrapper { height: 400px; }
+            .device-stage-wrapper { height: 600px; /* 增加高度以容纳平板和手机 */ }
             
-            /* 移动端：iPhone 样机保持正常比例，由JS控制缩放 */
+            /* 移动端：显示手机，从斜方向飞入 */
             .iphone { 
-                transform: rotate(0deg);
-                right: 10px; 
-                bottom: 20px; 
+                display: block;
+                width: 200px;
+                height: auto;
+                bottom: 40px; /* 往上移动，避免被下方板块遮挡 */
+                right: -300px; /* 初始位置在右侧外面，准备斜向飞入 */
+                transform: rotate(15deg) scale(0.35); /* 移动端更小的缩放 */
+                transform-origin: center bottom;
+                opacity: 0; /* 初始状态完全不可见 */
+                visibility: hidden; /* 初始状态完全隐藏 */
+            }
+            
+            /* 移动端平板居中显示 */
+            .tablet-scene {
+                width: 100%;
+                max-width: 500px;
+                height: auto;
+                aspect-ratio: 820 / 580;
+                left: 50%;
+                top: 20%;
+                transform: translate(-50%, -50%);
             }
             
             /* Bento Grid 变为单列 */
@@ -1985,7 +2136,20 @@
             .hero { padding: 6rem 5% 2rem; }
             .hero-text h1 { font-size: 2.5rem; }
             
-            .device-stage-wrapper { height: 350px; }
+            .device-stage-wrapper { height: 550px; /* 增加高度以容纳平板和手机 */ }
+            .device-group { height: 550px; }
+            .tablet-scene {
+                max-width: 85%;
+                top: 15%;
+            }
+            .iphone {
+                width: 180px;
+                transform: rotate(15deg) scale(0.3); /* 小屏更小的缩放 */
+                bottom: 30px; /* 往上移动，避免被下方板块遮挡 */
+                right: -300px; /* 初始位置在右侧外面 */
+                opacity: 0; /* 初始状态完全不可见 */
+                visibility: hidden; /* 初始状态完全隐藏 */
+            }
             /* 缩放由JS动态控制 */
             
             .cta-section { padding: 4rem 1rem; }
@@ -2161,93 +2325,64 @@
         <div class="device-stage-wrapper">
             <!-- 这是一个固定尺寸的组，通过 CSS transform 整体缩放 -->
             <div class="device-group">
-                <!-- Laptop -->
-                <div class="laptop">
-                    <div class="laptop-screen">
-                        <div class="ui-sidebar">
-                            <div class="sidebar-icon active">📊</div>
-                            <div class="sidebar-icon">📦</div>
-                            <div class="sidebar-icon">📈</div>
-                            <div class="sidebar-icon">💰</div>
-                            <div class="sidebar-icon">⚙️</div>
-                        </div>
-                        <div class="ui-main">
-                            <div class="ui-header">
-                                <div class="ui-header-left">
-                                    <div class="ui-logo" style="background: transparent; padding: 0;">
-                                        <img src="logogold.svg" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                                    </div>
-                                    <input type="text" class="ui-search" placeholder="搜索商品、订单、店铺..." />
-                                </div>
-                                <div class="ui-header-right">
-                                    <div class="ui-notification">🔔</div>
-                                    <div class="ui-avatar">李</div>
+                <!-- 平板样机 -->
+                <div class="tablet-scene" id="tablet-scene">
+                    <div class="tablet-floor-shadow" id="tablet-shadow"></div>
+                    
+                    <div class="tablet" id="tablet">
+                        <div class="tablet-corner-filler"></div>
+                        
+                        <!-- Sides -->
+                        <div class="tablet-face tablet-face-top"><div class="tablet-texture-layer"></div></div>
+                        <div class="tablet-face tablet-face-bottom"><div class="tablet-texture-layer"></div></div>
+                        <div class="tablet-face tablet-face-left"><div class="tablet-texture-layer"></div></div>
+                        <div class="tablet-face tablet-face-right"><div class="tablet-texture-layer"></div></div>
+
+                        <!-- Back (Initial View) -->
+                        <div class="tablet-face tablet-face-back">
+                            <div class="tablet-texture-layer"></div>
+                            <div class="tablet-sheen-layer" id="tablet-sheen"></div>
+                            <div class="tablet-camera-bump">
+                                <div class="tablet-lens-ring">
+                                    <div class="tablet-lens-glass"></div>
                                 </div>
                             </div>
-                            <div class="ui-content">
-                                <div class="ui-card-row">
-                                    <div class="ui-card">
-                                        <div class="ui-card-title">今日GMV</div>
-                                        <div class="ui-card-value">₽ 124,590</div>
-                                        <div class="ui-card-change positive">
-                                            <span>↑</span>
-                                            <span>+12.5%</span>
-                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
-                                        </div>
+                            <div class="tablet-brand-logo">PRO</div>
+                        </div>
+
+                        <!-- Front (UI) -->
+                        <div class="tablet-face tablet-face-front">
+                            <div class="tablet-screen-glass">
+                                <div class="tablet-glass-reflection" id="tablet-glare"></div>
+                                
+                                <div class="tablet-ui-container">
+                                    <div class="tablet-ui-sidebar">
+                                        <div class="tablet-ui-logo"></div>
+                                        <div style="width:24px;height:24px;background:#cbd5e1;border-radius:6px;margin-bottom:20px"></div>
+                                        <div style="width:24px;height:24px;background:#e2e8f0;border-radius:6px;"></div>
                                     </div>
-                                    <div class="ui-card">
-                                        <div class="ui-card-title">订单数量</div>
-                                        <div class="ui-card-value">1,247</div>
-                                        <div class="ui-card-change positive">
-                                            <span>↑</span>
-                                            <span>+8.3%</span>
-                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
+                                    <div class="tablet-ui-content">
+                                        <div class="tablet-ui-stats">
+                                            <div class="tablet-stat-card">
+                                                <div class="tablet-stat-lbl">Revenue</div>
+                                                <div class="tablet-stat-val">$14,200</div>
+                                            </div>
+                                            <div class="tablet-stat-card" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); border:none;">
+                                                <div class="tablet-stat-lbl" style="color:rgba(255,255,255,0.7)">Active</div>
+                                                <div class="tablet-stat-val" style="color:#fff">8,540</div>
+                                            </div>
+                                            <div class="tablet-stat-card">
+                                                <div class="tablet-stat-lbl">Churn</div>
+                                                <div class="tablet-stat-val" style="color:#ef4444">1.2%</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="ui-card">
-                                        <div class="ui-card-title">净利润</div>
-                                        <div class="ui-card-value">₽ 28,920</div>
-                                        <div class="ui-card-change positive">
-                                            <span>↑</span>
-                                            <span>+15.2%</span>
-                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
-                                        </div>
-                                    </div>
-                                    <div class="ui-card">
-                                        <div class="ui-card-title">转化率</div>
-                                        <div class="ui-card-value">3.24%</div>
-                                        <div class="ui-card-change negative">
-                                            <span>↓</span>
-                                            <span>-0.8%</span>
-                                            <span style="color: #64748b; margin-left: 4px;">vs 昨日</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ui-chart-area">
-                                    <div class="ui-chart-main">
-                                        <div class="ui-chart-title">7日销售趋势</div>
-                                        <div class="chart-bars">
-                                            <div class="bar" style="--h: 45%; animation-delay: 0s;"></div>
-                                            <div class="bar" style="--h: 68%; animation-delay: 0.1s;"></div>
-                                            <div class="bar" style="--h: 52%; animation-delay: 0.2s;"></div>
-                                            <div class="bar" style="--h: 85%; animation-delay: 0.3s;"></div>
-                                            <div class="bar" style="--h: 72%; animation-delay: 0.4s;"></div>
-                                            <div class="bar" style="--h: 90%; animation-delay: 0.5s;"></div>
-                                            <div class="bar" style="--h: 78%; animation-delay: 0.6s;"></div>
-                                        </div>
-                                    </div>
-                                    <div class="ui-chart-side">
-                                        <div class="ui-mini-card">
-                                            <div class="ui-mini-card-title">活跃店铺</div>
-                                            <div class="ui-mini-card-value">5</div>
-                                        </div>
-                                        <div class="ui-mini-card">
-                                            <div class="ui-mini-card-title">在售SKU</div>
-                                            <div class="ui-mini-card-value">1,247</div>
-                                        </div>
-                                        <div class="ui-mini-card">
-                                            <div class="ui-mini-card-title">库存预警</div>
-                                            <div class="ui-mini-card-value" style="color: #f59e0b;">12</div>
+                                        <div class="tablet-ui-chart">
+                                            <div class="tablet-chart-col"><div class="tablet-col-fill" data-h="40%"></div></div>
+                                            <div class="tablet-chart-col"><div class="tablet-col-fill" data-h="75%"></div></div>
+                                            <div class="tablet-chart-col"><div class="tablet-col-fill" data-h="55%"></div></div>
+                                            <div class="tablet-chart-col"><div class="tablet-col-fill" data-h="90%"></div></div>
+                                            <div class="tablet-chart-col"><div class="tablet-col-fill" data-h="65%"></div></div>
+                                            <div class="tablet-chart-col"><div class="tablet-col-fill" data-h="80%"></div></div>
                                         </div>
                                     </div>
                                 </div>
@@ -2257,7 +2392,7 @@
                 </div>
 
                 <!-- iPhone -->
-                <div class="iphone">
+                <div class="iphone" id="iphone">
                     <div class="iphone-screen">
                         <div class="phone-status-bar" id="phone-status-bar">
                             <!-- 状态栏内容由JS动态渲染 -->
@@ -3034,17 +3169,331 @@
         // 每3秒更新一次数据数字
         setInterval(updateDashboardNumbers, 3000);
 
-        // 5. 样机整体等比缩放：根据容器宽度自适应
+        // 5. 平板和手机样机动画
+        let deviceAnimationStarted = false;
+        
+        function initDeviceAnimations() {
+            if (deviceAnimationStarted) return; // 防止重复触发
+            deviceAnimationStarted = true;
+            
+            const tablet = document.getElementById('tablet');
+            const tabletScene = document.getElementById('tablet-scene');
+            const tabletSheen = document.getElementById('tablet-sheen');
+            const tabletGlare = document.getElementById('tablet-glare');
+            const tabletShadow = document.getElementById('tablet-shadow');
+            const tabletFills = document.querySelectorAll('.tablet-col-fill');
+            const iphone = document.getElementById('iphone');
+
+            if (!tablet || !tabletScene) return;
+
+            // 1. 平板初始状态设定
+            gsap.set(tablet, {
+                y: 500,
+                rotationX: -60,
+                rotationY: 190,
+                rotationZ: 10,
+                scale: 0.9
+            });
+            
+            // 背面光泽初始位置
+            if (tabletSheen) {
+                gsap.set(tabletSheen, { xPercent: -20, opacity: 0.6 });
+            }
+
+            // 手机初始状态
+            if (iphone) {
+                const isMobile = window.innerWidth <= 768;
+                if (isMobile) {
+                    // 移动端：从右下角斜向飞入的初始状态
+                    // 确保手机元素可见
+                    iphone.style.display = 'block';
+                    iphone.style.visibility = 'visible';
+                    
+                    gsap.set(iphone, {
+                        x: 300, // 从右侧外面
+                        y: 200, // 从下方
+                        rotation: 30, // 初始旋转角度
+                        opacity: 0, // 初始完全不可见
+                        visibility: 'hidden', // 初始完全隐藏
+                        scale: window.innerWidth <= 480 ? 0.3 : 0.35
+                    });
+                } else {
+                    // 桌面端：从右侧滑入的初始状态
+                    // 确保手机元素可见
+                    iphone.style.display = 'block';
+                    iphone.style.visibility = 'visible';
+                    
+                    // PC端：手机初始位置在右侧外面（right: -400px），通过GSAP的x来移动
+                    // 不需要设置x: 0，因为CSS已经设置了right: -400px作为初始位置
+                    gsap.set(iphone, {
+                        opacity: 0, // 初始完全不可见
+                        visibility: 'hidden', // 初始完全隐藏
+                        // 不设置x，保持CSS中的right: -400px位置
+                    });
+                }
+            }
+
+            const tl = gsap.timeline();
+
+            // Phase 1: 平板上浮并展示背面质感
+            if (tabletShadow) {
+                tl.to(tabletShadow, { opacity: 1, duration: 1 });
+            }
+            tl.to(tablet, {
+                duration: 1.6,
+                y: -20,
+                rotationX: 10,
+                rotationY: 180,
+                rotationZ: 0,
+                scale: 1,
+                ease: "power3.out"
+            }, 0);
+            if (tabletSheen) {
+                tl.to(tabletSheen, {
+                    duration: 1.6,
+                    xPercent: 20,
+                    opacity: 0.9,
+                    ease: "power3.out"
+                }, 0);
+            }
+
+            // Phase 2: 悬停展示背面一瞬间
+            tl.to(tablet, {
+                duration: 0.6,
+                rotationY: 175,
+                y: 0,
+                ease: "sine.inOut"
+            });
+
+            // Phase 3: 华丽翻转
+            tl.to(tablet, {
+                duration: 1.8,
+                rotationY: 0,
+                rotationX: 5,
+                ease: "power4.inOut"
+            }, "flip");
+
+            // 翻转时，阴影变形
+            if (tabletShadow) {
+                tl.to(tabletShadow, {
+                    scaleX: 0.8,
+                    duration: 0.9,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: "power2.inOut"
+                }, "flip");
+            }
+
+            // Phase 4: 正面反光扫过
+            if (tabletGlare) {
+                tl.to(tabletGlare, {
+                    duration: 0.8,
+                    x: "150%",
+                    y: "150%",
+                    opacity: 1,
+                    ease: "power2.out"
+                }, "-=0.8");
+            }
+
+            // Phase 5: UI 图表增长
+            if (tabletFills.length > 0) {
+                tl.call(() => {
+                    tabletFills.forEach(f => f.style.height = f.getAttribute('data-h'));
+                }, null, "-=0.4");
+            }
+
+            // Phase 6: 手机飞入动画
+            if (iphone) {
+                const isMobile = window.innerWidth <= 768;
+                
+                if (isMobile) {
+                    // 移动端：从右下角斜向飞入，在平板翻转完成后1秒开始
+                    // 确保手机元素可见
+                    iphone.style.display = 'block';
+                    iphone.style.visibility = 'visible';
+                    
+                    tl.to(iphone, {
+                        duration: 1.5,
+                        x: 0, // 移动到最终位置
+                        y: 0,
+                        rotation: -5, // 最终旋转角度
+                        opacity: 1,
+                        scale: window.innerWidth <= 480 ? 0.3 : 0.35,
+                        ease: "power3.out"
+                    }, "flip+=1"); // 在平板翻转完成后1秒开始
+                } else {
+                    // 桌面端：从右侧滑入
+                    // 确保手机元素可见
+                    iphone.style.display = 'block';
+                    iphone.style.visibility = 'visible';
+                    
+                    // PC端：使用right属性来移动，从-400px移动到20px
+                    tl.fromTo(iphone, 
+                        {
+                            right: -400, // 初始位置
+                            opacity: 0, // 初始完全不可见
+                            visibility: 'hidden' // 初始完全隐藏
+                        },
+                        {
+                            duration: 1.2,
+                            right: 20, // 最终位置
+                            opacity: 1,
+                            visibility: 'visible', // 动画时变为可见
+                            ease: "power3.out"
+                        }, 
+                        "-=0.5"
+                    );
+                }
+            }
+
+            // Phase 7: 永久悬浮呼吸
+            tl.to(tablet, {
+                y: -15,
+                rotationX: 8,
+                rotationY: -3,
+                duration: 4,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            
+            // 阴影跟随呼吸
+            if (tabletShadow) {
+                tl.to(tabletShadow, {
+                    opacity: 0.6,
+                    scale: 0.95,
+                    duration: 4,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                }, "-=4");
+            }
+
+            // 交互细节：鼠标移动时，增加微弱的金属反光变化（仅桌面端）
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', (e) => {
+                    if (tl.isActive()) return;
+
+                    const x = (e.clientX / window.innerWidth - 0.5);
+                    const y = (e.clientY / window.innerHeight - 0.5);
+
+                    // 视差旋转
+                    gsap.to(tablet, {
+                        rotationY: x * 15,
+                        rotationX: 5 - y * 10,
+                        duration: 1,
+                        ease: "power2.out"
+                    });
+
+                    // 玻璃反光跟随鼠标微动
+                    if (tabletGlare) {
+                        gsap.to(tabletGlare, {
+                            x: x * 50 + "%",
+                            opacity: 0.3,
+                            duration: 1
+                        });
+                    }
+                });
+            }
+        }
+
+        // 使用 Intersection Observer 检测滚动，当滚动到样机区域时再触发动画
+        if (typeof gsap !== 'undefined' && 'IntersectionObserver' in window) {
+            const deviceWrapper = document.querySelector('.device-stage-wrapper');
+            if (deviceWrapper) {
+                // 先设置初始状态
+                const tablet = document.getElementById('tablet');
+                const tabletSheen = document.getElementById('tablet-sheen');
+                const tabletShadow = document.getElementById('tablet-shadow');
+                const iphone = document.getElementById('iphone');
+                
+                if (tablet) {
+                    gsap.set(tablet, {
+                        y: 500,
+                        rotationX: -60,
+                        rotationY: 190,
+                        rotationZ: 10,
+                        scale: 0.9
+                    });
+                }
+                if (tabletSheen) {
+                    gsap.set(tabletSheen, { xPercent: -20, opacity: 0.6 });
+                }
+                if (tabletShadow) {
+                    gsap.set(tabletShadow, { opacity: 0 });
+                }
+                if (iphone) {
+                    const isMobile = window.innerWidth <= 768;
+                    if (isMobile) {
+                        // 移动端：从右下角斜向飞入的初始状态
+                        // 确保手机元素可见
+                        iphone.style.display = 'block';
+                        iphone.style.visibility = 'visible';
+                        
+                        gsap.set(iphone, {
+                            x: 300,
+                            y: 200,
+                            rotation: 30,
+                            opacity: 0, // 初始完全不可见
+                            visibility: 'hidden', // 初始完全隐藏
+                            scale: window.innerWidth <= 480 ? 0.3 : 0.35
+                        });
+                    } else {
+                        // 桌面端：从右侧滑入的初始状态
+                        // 确保手机元素可见
+                        iphone.style.display = 'block';
+                        iphone.style.visibility = 'visible';
+                        
+                        // PC端：保持CSS中的right: -400px作为初始位置
+                        gsap.set(iphone, { 
+                            opacity: 0, // 初始完全不可见
+                            visibility: 'hidden', // 初始完全隐藏
+                            // 不设置x或right，保持CSS中的初始位置
+                        });
+                    }
+                }
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !deviceAnimationStarted) {
+                            // 当样机区域进入视口时，触发动画
+                            initDeviceAnimations();
+                        }
+                    });
+                }, {
+                    threshold: 0.3, // 当30%的区域可见时触发
+                    rootMargin: '0px'
+                });
+
+                observer.observe(deviceWrapper);
+            }
+        } else if (typeof gsap !== 'undefined') {
+            // 降级方案：如果浏览器不支持 IntersectionObserver，延迟3秒后自动播放
+            setTimeout(() => {
+                initDeviceAnimations();
+            }, 3000);
+        }
+
+        // 6. 样机整体等比缩放：根据容器宽度自适应
         function updateDeviceScale() {
             const group = document.querySelector('.device-group');
             const wrapper = document.querySelector('.device-stage-wrapper');
             if (!group || !wrapper) return;
 
-            const baseWidth = 900; // 与 CSS 中 device-group 宽度保持一致
+            const baseWidth = 1200; // 与 CSS 中 device-group 宽度保持一致
             const availableWidth = wrapper.clientWidth;
             let scale = availableWidth / baseWidth;
 
-            // 限制缩放范围，确保在不同尺寸下都能完整展示
+            const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+            
+            // 移动端使用专门的 CSS 布局，不再整体缩放样机组
+            if (viewportWidth <= 768) {
+                group.style.transform = 'none';
+                group.style.transformOrigin = 'center center';
+                return;
+            }
+
+            // 桌面端：限制缩放范围，确保在不同尺寸下都能完整展示
             const maxScale = 1;
             const minScale = 0.25;
             if (scale > maxScale) scale = maxScale;
