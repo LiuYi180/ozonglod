@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ozon 掘金 PRO</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
     <style>
         /* --- 0. 全局定义与变量 --- */
         :root {
@@ -379,6 +386,70 @@
             gap: 2rem;
             position: relative;
             z-index: 1;
+            overflow: hidden; /* 确保3D背景不溢出 */
+        }
+
+        /* 3D全息地形背景容器 */
+        .hero-bg-3d {
+            position: absolute;
+            top: 0;
+            /* 突破父容器宽度限制，扩展到整个视口 */
+            /* 使用calc让背景从视口左边缘开始，而不是父容器左边缘 */
+            left: calc(50% - 50vw);
+            width: 100vw;
+            height: 100%;
+            min-height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            /* 确保在全屏模式下也能正确显示 */
+            box-sizing: border-box;
+        }
+        
+        /* 全屏模式下的额外保障 */
+        :fullscreen .hero-bg-3d,
+        :-webkit-full-screen .hero-bg-3d,
+        :-moz-full-screen .hero-bg-3d,
+        :-ms-fullscreen .hero-bg-3d {
+            left: 0;
+            width: 100%;
+        }
+
+        .hero-bg-3d canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            opacity: 0.6; /* 降低透明度，让内容更清晰 */
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            padding: 0;
+            /* 边缘柔化遮罩：左右边缘和底部边缘渐变淡出，与白色背景自然衔接 */
+            /* 使用径向渐变创建更自然的边缘过渡（从中心向四周淡出） */
+            mask-image: radial-gradient(
+                ellipse 120% 150% at center 40%,
+                black 0%,
+                black 50%,
+                rgba(0, 0, 0, 0.8) 65%,
+                rgba(0, 0, 0, 0.4) 80%,
+                rgba(0, 0, 0, 0.1) 90%,
+                transparent 100%
+            );
+            -webkit-mask-image: radial-gradient(
+                ellipse 120% 150% at center 40%,
+                black 0%,
+                black 50%,
+                rgba(0, 0, 0, 0.8) 65%,
+                rgba(0, 0, 0, 0.4) 80%,
+                rgba(0, 0, 0, 0.1) 90%,
+                transparent 100%
+            );
         }
 
         .hero::before {
@@ -565,12 +636,13 @@
         }
         
         @media (max-width: 480px) {
-            /* 小屏移动端 */
+            /* 小屏移动端：保持自适应高度，只在必要时微调间距 */
             .device-stage-wrapper {
-                height: 400px;
+                height: auto;
+                padding-top: 1.5rem;
             }
             .device-group {
-                height: 400px;
+                height: auto;
             }
             .tablet-scene {
                 max-width: 90%;
@@ -2202,6 +2274,9 @@
 
     <!-- Hero 区域 -->
     <header class="hero">
+        <!-- 3D全息地形背景 -->
+        <div class="hero-bg-3d" id="heroBg3d"></div>
+        
         <div class="hero-text">
             <div class="section-tag reveal d-1">Beta 2.0 Now Live</div>
             <h1 class="reveal d-2">
@@ -2239,88 +2314,8 @@
         </div>
     </div>
 
-<!-- Section 2: Architecture -->
-    <section class="section">
-        <div class="container">
-            <div class="section-header text-center fade-up">
-                <h2>为什么选择 Ozon 掘金 PRO？</h2>
-                <p>不是理论，是实战经验 | 不是工具堆砌，是完整系统 | 不是一次性方案，是持续进化</p>
-            </div>
-            
-            <div class="grid-3">
-                <div class="arch-card fade-up" style="transition-delay: 0.1s;">
-                    <div class="icon-box">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-                    </div>
-                    <h3>✓ 不是理论，是实战经验</h3>
-                    <p>所有方法都来自真实的 Ozon 运营实践。我们踩过的坑、验证过的流程，你拿来就能用，不用再重新摸索。</p>
-                </div>
-                <div class="arch-card fade-up" style="transition-delay: 0.2s;">
-                    <div class="icon-box">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                    </div>
-                    <h3>✓ 不是工具堆砌，是完整系统</h3>
-                    <p>从决策到执行，形成完整闭环。Pad 端看全局做判断，手机端盯变化快响应，平台层持续学习优化。</p>
-                </div>
-                <div class="arch-card fade-up" style="transition-delay: 0.3s;">
-                    <div class="icon-box">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path></svg>
-                    </div>
-                    <h3>✓ 不是一次性方案，是持续进化</h3>
-                    <p>系统会根据市场变化持续优化。每周模型迭代，每次使用都是最新版本，确保方法始终有效。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-        <!-- Section 2: Core Value (Data Driven) -->
-    <!-- 核心功能与样机展示 -->
-    <section class="feature-section">
-        <div class="section-header">
-            <span class="section-tag">System Thinking</span>
-            <h2>把店铺当成"系统"来运营</h2>
-            <p style="color: var(--text-sub); margin-top: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">我们关注的不是某一个爆款技巧，而是从数据、决策到执行的整套方法论。</p>
-        </div>
-
-        <!-- 对比区块 -->
-        <div class="container" style="max-width: 1000px; margin: 3rem auto; padding: 0 5%;">
-            <div class="fade-up comparison-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
-                <div style="border-right: 1px solid var(--border-light); padding-right: 2rem;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-                        <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 50%; color: #9ca3af;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </div>
-                        <h3 style="font-size: 1.2rem; color: var(--text-sub);">传统方式</h3>
-                    </div>
-                    <ul style="list-style: none; line-height: 2;">
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 选品靠感觉，不知道哪个能卖</li>
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 定价看竞对，不知道利润空间</li>
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 数据散落各处，看不清全局</li>
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 每次都要重新摸索</li>
-                    </ul>
-                </div>
-                <div style="padding-left: 2rem;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
-                        <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: rgba(109, 40, 217, 0.1); border-radius: 50%; color: var(--brand-purple);">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                        <h3 style="font-size: 1.2rem; color: var(--brand-purple);">使用 Ozon 掘金 PRO</h3>
-                    </div>
-                    <ul style="list-style: none; line-height: 2;">
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 数据驱动的选品建议</li>
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 综合利润与市场的定价策略</li>
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 一张图看清所有关键指标</li>
-                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 复用已验证的运营流程</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
+    <!-- 样机展示 -->
+    <section class="feature-section" style="padding-top: 2rem; padding-bottom: 2rem;">
         <!-- 响应式样机舞台 -->
         <div class="device-stage-wrapper">
             <!-- 这是一个固定尺寸的组，通过 CSS transform 整体缩放 -->
@@ -2401,6 +2396,89 @@
                             <!-- 小程序UI内容将通过JS动态渲染 -->
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Section 2: Architecture -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <h2>为什么选择 Ozon 掘金 PRO？</h2>
+                <p>不是理论，是实战经验 | 不是工具堆砌，是完整系统 | 不是一次性方案，是持续进化</p>
+            </div>
+            
+            <div class="grid-3">
+                <div class="arch-card fade-up" style="transition-delay: 0.1s;">
+                    <div class="icon-box">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    </div>
+                    <h3>✓ 不是理论，是实战经验</h3>
+                    <p>所有方法都来自真实的 Ozon 运营实践。我们踩过的坑、验证过的流程，你拿来就能用，不用再重新摸索。</p>
+                </div>
+                <div class="arch-card fade-up" style="transition-delay: 0.2s;">
+                    <div class="icon-box">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                    </div>
+                    <h3>✓ 不是工具堆砌，是完整系统</h3>
+                    <p>从决策到执行，形成完整闭环。Pad 端看全局做判断，手机端盯变化快响应，平台层持续学习优化。</p>
+                </div>
+                <div class="arch-card fade-up" style="transition-delay: 0.3s;">
+                    <div class="icon-box">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path></svg>
+                    </div>
+                    <h3>✓ 不是一次性方案，是持续进化</h3>
+                    <p>系统会根据市场变化持续优化。每周模型迭代，每次使用都是最新版本，确保方法始终有效。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Section 2: Core Value (Data Driven) -->
+    <!-- 核心功能与样机展示 -->
+    <section class="feature-section">
+        <div class="section-header">
+            <span class="section-tag">System Thinking</span>
+            <h2>把店铺当成"系统"来运营</h2>
+            <p style="color: var(--text-sub); margin-top: 1rem; max-width: 600px; margin-left: auto; margin-right: auto;">我们关注的不是某一个爆款技巧，而是从数据、决策到执行的整套方法论。</p>
+        </div>
+
+        <!-- 对比区块 -->
+        <div class="container" style="max-width: 1000px; margin: 3rem auto; padding: 0 5%;">
+            <div class="fade-up comparison-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: white; border-radius: 20px; padding: 3rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+                <div style="border-right: 1px solid var(--border-light); padding-right: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
+                        <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: #f3f4f6; border-radius: 50%; color: #9ca3af;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </div>
+                        <h3 style="font-size: 1.2rem; color: var(--text-sub);">传统方式</h3>
+                    </div>
+                    <ul style="list-style: none; line-height: 2;">
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 选品靠感觉，不知道哪个能卖</li>
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 定价看竞对，不知道利润空间</li>
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 数据散落各处，看不清全局</li>
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 每次都要重新摸索</li>
+                    </ul>
+                </div>
+                <div style="padding-left: 2rem;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;">
+                        <div style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: rgba(109, 40, 217, 0.1); border-radius: 50%; color: var(--brand-purple);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <h3 style="font-size: 1.2rem; color: var(--brand-purple);">使用 Ozon 掘金 PRO</h3>
+                    </div>
+                    <ul style="list-style: none; line-height: 2;">
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 数据驱动的选品建议</li>
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 综合利润与市场的定价策略</li>
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 一张图看清所有关键指标</li>
+                        <li style="margin-bottom: 0.8rem; color: var(--text-sub);">• 复用已验证的运营流程</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -2503,6 +2581,303 @@
             用户需根据自身情况独立判断与决策
         </div>
     </footer>
+
+    <!-- 3D全息地形背景脚本 -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        // 初始化3D全息地形背景
+        function initHero3DBg() {
+            const container = document.getElementById('heroBg3d');
+            if (!container) return;
+
+            // 获取容器实际尺寸
+            function getContainerSize() {
+                const rect = container.getBoundingClientRect();
+                const hero = container.parentElement;
+                const heroRect = hero ? hero.getBoundingClientRect() : rect;
+                
+                // 获取视口宽度，优先使用documentElement.clientWidth（不包括滚动条）
+                // 在全屏模式下更准确
+                const viewportWidth = Math.max(
+                    window.innerWidth,
+                    document.documentElement.clientWidth,
+                    document.body.clientWidth,
+                    rect.width
+                );
+                const viewportHeight = Math.max(
+                    window.innerHeight,
+                    document.documentElement.clientHeight,
+                    rect.height,
+                    heroRect.height
+                );
+                
+                return {
+                    width: viewportWidth, // 使用最大宽度，确保铺满
+                    height: viewportHeight
+                };
+            }
+
+            const size = getContainerSize();
+
+            // 场景设置：纯白背景
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xffffff); // 纯白
+            
+            // 纯白雾化：让3D物体融入白色背景
+            scene.fog = new THREE.FogExp2(0xffffff, 0.045);
+
+            const camera = new THREE.PerspectiveCamera(50, size.width / size.height, 0.1, 100);
+            camera.position.set(0, 3, 6); 
+            camera.lookAt(0, 0, 0);
+
+            const renderer = new THREE.WebGLRenderer({ 
+                antialias: true, 
+                alpha: false,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(size.width, size.height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.toneMapping = THREE.ReinhardToneMapping;
+            renderer.toneMappingExposure = 2.0;
+            renderer.setClearColor(0xffffff, 1); // 确保背景是纯白色
+            
+            // 确保canvas填满容器，无白边
+            const canvas = renderer.domElement;
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.display = 'block';
+            canvas.style.position = 'absolute';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.right = '0';
+            canvas.style.bottom = '0';
+            canvas.style.margin = '0';
+            canvas.style.padding = '0';
+            canvas.style.objectFit = 'cover';
+            
+            container.appendChild(canvas);
+
+            // 科技感着色器
+            const vertexShader = `
+                uniform float uTime;
+                
+                varying vec2 vUv;
+                varying float vElevation;
+                varying vec3 vNormal;
+                varying vec3 vViewPosition;
+
+                void main() {
+                    vUv = uv;
+                    vec3 pos = position;
+
+                    // 规则一点的波浪，更有"数据流"的感觉
+                    float wave1 = sin(pos.x * 1.5 + uTime * 0.5);
+                    float wave2 = cos(pos.y * 1.5 + uTime * 0.4);
+                    float wave3 = sin((pos.x + pos.y) * 2.0 + uTime * 0.8) * 0.3;
+
+                    // 叠加波浪
+                    float elevation = (wave1 + wave2 + wave3) * 0.3;
+                    
+                    // 边缘衰减：让平面边缘平滑复位
+                    float dist = length(uv - 0.5);
+                    elevation *= (1.0 - smoothstep(0.35, 0.5, dist));
+
+                    pos.z += elevation;
+                    vElevation = elevation;
+
+                    // 计算法线
+                    vec3 objectNormal = normalize(vec3(
+                        -0.5 * cos(pos.x * 1.5 + uTime * 0.5), 
+                        -0.5 * sin(pos.y * 1.5 + uTime * 0.4), 
+                        1.0
+                    ));
+                    vNormal = normalMatrix * objectNormal;
+
+                    vec4 modelViewPosition = modelViewMatrix * vec4(pos, 1.0);
+                    vViewPosition = -modelViewPosition.xyz;
+                    gl_Position = projectionMatrix * modelViewPosition;
+                }
+            `;
+
+            const fragmentShader = `
+                uniform vec3 uColor1; // #FF9EC8
+                uniform vec3 uColor2; // #C2AEFF
+                uniform vec3 uColor3; // #94DBFF
+                uniform float uTime;
+
+                varying float vElevation;
+                varying vec2 vUv;
+                varying vec3 vNormal;
+                varying vec3 vViewPosition;
+
+                void main() {
+                    // 网格系统
+                    vec2 gridUv = vUv * 30.0;
+                    vec2 gridLine = abs(fract(gridUv - 0.5) - 0.5) / fwidth(gridUv);
+                    float line = min(gridLine.x, gridLine.y);
+                    
+                    // 增强网格线条的可见度
+                    float gridIntensity = 1.0 - min(line, 1.0);
+                    gridIntensity = pow(gridIntensity, 0.7); // 让线条更明显
+                    gridIntensity *= (1.0 - smoothstep(0.1, 0.5, length(vUv - 0.5)));
+
+                    // 虹彩光泽
+                    float mixFactor = smoothstep(-0.5, 0.8, vElevation);
+                    vec3 gradientColor = mix(uColor1, uColor2, mixFactor);
+                    gradientColor = mix(gradientColor, uColor3, smoothstep(0.4, 1.0, mixFactor));
+
+                    // 光照模型
+                    vec3 viewDir = normalize(vViewPosition);
+                    vec3 normal = normalize(vNormal);
+                    vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
+
+                    // 漫反射
+                    float diff = dot(normal, lightDir) * 0.5 + 0.5;
+                    
+                    // 菲涅尔
+                    float fresnel = pow(1.0 - dot(viewDir, normal), 4.0);
+
+                    // 高光
+                    vec3 reflectDir = reflect(-lightDir, normal);
+                    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 30.0);
+
+                    // 最终合成
+                    vec3 baseColor = vec3(0.96, 0.98, 1.0); 
+                    vec3 finalColor = mix(gradientColor, baseColor, diff * 0.8 + 0.2);
+                    // 网格线条：更明显（0.5）但明度更低（0.5）
+                    finalColor = mix(finalColor, uColor2 * 0.5, gridIntensity * 0.5);
+                    finalColor += gradientColor * fresnel * 0.6;
+                    finalColor += vec3(1.0) * spec * 0.8;
+
+                    // 远处融入纯白背景
+                    float fogDist = length(vUv - 0.5);
+                    finalColor = mix(finalColor, vec3(1.0), smoothstep(0.3, 0.5, fogDist));
+
+                    // 边缘柔化：左右边缘渐变淡出
+                    float edgeFade = 1.0;
+                    // 左边缘柔化（从0到0.15的区域）
+                    float leftEdge = smoothstep(0.0, 0.15, vUv.x);
+                    // 右边缘柔化（从0.85到1.0的区域）
+                    float rightEdge = smoothstep(1.0, 0.85, vUv.x);
+                    // 上边缘柔化（轻微）
+                    float topEdge = smoothstep(0.0, 0.1, vUv.y);
+                    // 下边缘柔化：扩大渐变范围，让底部更自然地过渡到白色
+                    // 从0.6开始渐变，到1.0完全淡出
+                    float bottomEdge = smoothstep(1.0, 0.6, vUv.y);
+                    
+                    // 组合所有边缘柔化
+                    edgeFade = min(leftEdge, rightEdge);
+                    edgeFade = min(edgeFade, topEdge);
+                    edgeFade = min(edgeFade, bottomEdge);
+                    
+                    // 应用边缘柔化，让边缘逐渐淡出到白色
+                    finalColor = mix(vec3(1.0), finalColor, edgeFade);
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            // 颜色定义
+            const uniforms = {
+                uTime: { value: 0 },
+                uColor1: { value: new THREE.Color('#FF9EC8') },
+                uColor2: { value: new THREE.Color('#C2AEFF') },
+                uColor3: { value: new THREE.Color('#94DBFF') }
+            };
+
+            const material = new THREE.ShaderMaterial({
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
+                uniforms: uniforms,
+                side: THREE.DoubleSide,
+                wireframe: false
+            });
+
+            const geometry = new THREE.PlaneGeometry(12, 12, 128, 128);
+            const plane = new THREE.Mesh(geometry, material);
+
+            // 调整角度：更强的透视感
+            plane.rotation.x = -Math.PI / 2.5; 
+            plane.rotation.z = Math.PI / 6;
+
+            scene.add(plane);
+
+            // 动画与渲染
+            const clock = new THREE.Clock();
+
+            function animate() {
+                const time = clock.getElapsedTime();
+                material.uniforms.uTime.value = time * 0.5;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            // 窗口大小调整
+            function handleResize() {
+                // 强制重新计算，特别是在全屏切换时
+                const size = getContainerSize();
+                
+                // 确保尺寸有效
+                if (size.width > 0 && size.height > 0) {
+                    camera.aspect = size.width / size.height;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(size.width, size.height);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    
+                    // 确保canvas填满容器，无白边
+                    const canvas = renderer.domElement;
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    canvas.style.left = '0';
+                    canvas.style.right = '0';
+                    
+                    // 强制重新渲染
+                    renderer.render(scene, camera);
+                }
+            }
+
+            // 使用防抖优化resize性能
+            let resizeTimer;
+            function debouncedResize() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    handleResize();
+                }, 16); // 约60fps
+            }
+            
+            window.addEventListener('resize', debouncedResize);
+            
+            // 监听全屏切换事件
+            document.addEventListener('fullscreenchange', handleResize);
+            document.addEventListener('webkitfullscreenchange', handleResize);
+            document.addEventListener('mozfullscreenchange', handleResize);
+            document.addEventListener('MSFullscreenChange', handleResize);
+            
+            // 延迟初始化，确保DOM完全渲染
+            setTimeout(() => {
+                handleResize();
+            }, 100);
+            
+            // 使用ResizeObserver监听容器尺寸变化（更准确）
+            if (window.ResizeObserver) {
+                const resizeObserver = new ResizeObserver(() => {
+                    handleResize();
+                });
+                resizeObserver.observe(container);
+                resizeObserver.observe(document.documentElement);
+            }
+        }
+
+        // 等待DOM加载完成后初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initHero3DBg);
+        } else {
+            initHero3DBg();
+        }
+    </script>
 
     <script>
         // 页面加载动画

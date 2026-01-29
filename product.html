@@ -242,12 +242,13 @@
         }
         
         @media (max-width: 480px) {
-            /* 小屏移动端 */
+            /* 小屏移动端：保持自适应高度，避免内容被裁切 */
             .device-stage-wrapper {
-                height: 400px;
+                height: auto;
+                padding-top: 1.5rem;
             }
             .device-group {
-                height: 400px;
+                height: auto;
             }
             .tablet-scene {
                 max-width: 90%;
@@ -796,439 +797,325 @@
         .bg-dark p { color: #94a3b8; }
         .bg-dark h2 { color: white; }
 
-        /* --- Ozonglod 智能助手模块 (Enhanced) --- */
+        /* --- Ozonglod 智能助手模块 --- */
         .assistant-section {
-            background: linear-gradient(180deg, #FAFAFA 0%, #F3E8FF 100%);
-            position: relative;
-            overflow: hidden;
+            background: radial-gradient(circle at 0 0, rgba(109, 40, 217, 0.08) 0%, transparent 55%);
         }
-        
-        /* 背景装饰 */
-        .assistant-bg-decoration {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 120%; height: 120%;
-            background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 60%);
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
         .assistant-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-            gap: 2.5rem;
-            align-items: start;
-            margin-top: 3.5rem;
-            position: relative;
-            z-index: 1;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+            gap: 3rem;
+            align-items: stretch;
+            margin-top: 3rem;
         }
-
         .assistant-header {
             max-width: 640px;
             margin: 0 auto;
             text-align: center;
-            position: relative;
-            z-index: 2;
         }
         .assistant-tag {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 14px;
+            padding: 4px 12px;
             border-radius: 999px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(109,40,217,0.08);
             color: var(--brand-purple);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            backdrop-filter: blur(4px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(109,40,217,0.18);
         }
         .assistant-tag-dot {
             width: 6px;
             height: 6px;
             border-radius: 999px;
             background: #22c55e;
-            box-shadow: 0 0 0 4px rgba(34,197,94,0.2);
-            animation: pulse-green 2s infinite;
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.3);
         }
-        
-        @keyframes pulse-green {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-        }
-
         .assistant-title {
-            font-size: 2.2rem;
-            margin: 1.2rem 0 0.8rem;
-            background: linear-gradient(135deg, #111827 0%, #4b5563 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            margin: 1rem 0 0.75rem;
         }
         .assistant-desc {
-            font-size: 1.05rem;
+            font-size: 0.98rem;
             color: var(--text-sub);
             line-height: 1.8;
         }
 
-        /* 左侧：对话区域 */
+        /* 对话区域 */
         .assistant-chat-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: white;
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            padding: 2rem;
-            box-shadow: 
-                0 20px 50px -12px rgba(109, 40, 217, 0.15),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem 1.75rem;
+            box-shadow: 0 18px 40px -18px rgba(15,23,42,0.25);
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(20px);
-            height: 100%;
-            min-height: 550px;
-            display: flex;
-            flex-direction: column;
         }
-        
+        .assistant-chat-card::before {
+            content: '';
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(248, 113, 165, 0.06) 0%, transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.08) 0%, transparent 55%);
+            opacity: 1;
+            pointer-events: none;
+        }
         .assistant-chat-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
-        
         .assistant-chat-user {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
+            gap: 0.6rem;
         }
         .assistant-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%);
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: linear-gradient(135deg,#6366f1,#ec4899);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            box-shadow: 0 8px 16px rgba(109, 40, 217, 0.25);
+            box-shadow: 0 0 0 3px #eef2ff;
         }
         .assistant-name {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1f2937;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
         .assistant-status {
             font-size: 0.75rem;
-            color: #10b981;
+            color: #16a34a;
             display: flex;
             align-items: center;
-            gap: 5px;
-            margin-top: 2px;
-            font-weight: 500;
+            gap: 4px;
         }
-        
+        .assistant-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 0 6px rgba(34,197,94,0.18);
+        }
         .assistant-chat-body {
-            flex: 1;
+            position: relative;
+            z-index: 1;
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
-            overflow-y: auto;
-            padding-right: 5px;
+            gap: 0.75rem;
         }
-        
         .assistant-bubble {
-            max-width: 88%;
-            padding: 1rem 1.2rem;
-            border-radius: 18px;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            max-width: 92%;
+            padding: 0.75rem 0.95rem;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(12px) translateX(-8px);
+            transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
         }
-        
+        .assistant-bubble.visible {
+            opacity: 1;
+            transform: translateY(0) translateX(0);
+        }
+        .assistant-bubble.typing {
+            position: relative;
+            overflow: hidden;
+        }
+        .assistant-bubble.typing::after {
+            content: '';
+            position: absolute;
+            top: 0.55rem;
+            right: 0.6rem;
+            width: 2px;
+            height: 1.1em;
+            background: rgba(15,23,42,0.45);
+            animation: assistant-caret 0.8s steps(2, start) infinite;
+        }
+        @keyframes assistant-caret {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
         .assistant-bubble.user {
             align-self: flex-end;
-            background: #1f2937;
-            color: white;
+            background: #111827;
+            color: #f9fafb;
             border-bottom-right-radius: 4px;
-            box-shadow: 0 5px 15px rgba(31, 41, 55, 0.15);
         }
-        
         .assistant-bubble.bot {
             align-self: flex-start;
-            background: white;
-            color: #374151;
+            background: #f3f4ff;
+            color: #111827;
             border-bottom-left-radius: 4px;
-            border: 1px solid rgba(229, 231, 235, 0.8);
+            border: 1px solid rgba(129,140,248,0.35);
         }
-        
         .assistant-bubble-label {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.4rem;
-            opacity: 0.8;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.35rem;
+            opacity: 0.7;
         }
-        
+        .assistant-bubble-label span {
+            width: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: currentColor;
+        }
         .assistant-chat-footer {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(0,0,0,0.05);
+            margin-top: 1rem;
             display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-        
-        .assistant-chip {
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            background: #f3f4f6;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.75rem;
-            color: #4b5563;
-            font-weight: 500;
-            transition: 0.3s;
-            cursor: default;
+            color: #6b7280;
         }
-        .assistant-chip:hover {
-            background: #e0e7ff;
-            color: #4f46e5;
+        .assistant-chip {
+            padding: 0.3rem 0.6rem;
+            border-radius: 999px;
+            background: #f3f4ff;
+            border: 1px dashed rgba(129,140,248,0.5);
+            font-size: 0.7rem;
+            color: #4b5563;
         }
 
-        /* 右侧：数据与功能区 */
+        /* 右侧：数据与日报示意 */
         .assistant-metrics {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
-            height: 100%;
+            gap: 1rem;
         }
-        
-        /* 顶部指标行 */
         .assistant-metric-row {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.8rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
         }
-        
         .assistant-metric-card {
             background: white;
             border-radius: 16px;
-            padding: 1rem;
-            border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            transition: transform 0.3s;
+            border: 1px solid var(--border-light);
+            padding: 0.85rem 0.9rem;
+            font-size: 0.78rem;
+            box-shadow: 0 10px 25px -18px rgba(15,23,42,0.3);
         }
-        .assistant-metric-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-        }
-        
         .assistant-metric-label {
-            font-size: 0.75rem;
             color: #6b7280;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
         }
-        
         .assistant-metric-value {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #111827;
-            display: flex;
-            align-items: baseline;
-            gap: 4px;
+            font-size: 1rem;
+            font-weight: 700;
         }
-        
         .assistant-metric-tag {
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 1px 5px;
-            border-radius: 4px;
-            background: #ecfdf5;
-            color: #059669;
+            font-size: 0.68rem;
+            color: #22c55e;
+            margin-left: 0.25rem;
+        }
+        .assistant-metric-value.warn {
+            color: #ef4444;
         }
         .assistant-metric-tag.warn {
-            background: #fef2f2;
-            color: #dc2626;
+            color: #f97316;
         }
-        .assistant-metric-value.warn { color: #dc2626; }
 
-        /* 报表卡片 */
         .assistant-report-card {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 1.5rem;
-            color: white;
+            background: #0f172a;
+            color: #e5e7eb;
+            border-radius: 18px;
+            padding: 1rem 1.1rem;
+            font-size: 0.78rem;
+            border: 1px solid rgba(148,163,184,0.5);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 15px 30px rgba(30, 41, 59, 0.2);
         }
-        
         .assistant-report-card::before {
             content: '';
             position: absolute;
-            top: 0; right: 0;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+            inset: -30%;
+            background: radial-gradient(circle at 0 0, rgba(56,189,248,0.18) 0%, transparent 55%);
+            opacity: 0.8;
             pointer-events: none;
         }
-        
+        .assistant-report-card-inner {
+            position: relative;
+            z-index: 1;
+        }
         .assistant-report-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 0.6rem;
         }
-        
-        .assistant-report-title { font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
-        .assistant-report-icon { width: 18px; height: 18px; opacity: 0.8; }
-        
-        .assistant-report-table { width: 100%; border-collapse: separate; border-spacing: 0 4px; }
-        .assistant-report-table th { text-align: left; font-size: 0.75rem; color: #94a3b8; padding: 0 8px; font-weight: 500; }
-        .assistant-report-table td { font-size: 0.8rem; padding: 8px; background: rgba(255,255,255,0.03); }
-        .assistant-report-table td:first-child { border-radius: 6px 0 0 6px; }
-        .assistant-report-table td:last-child { border-radius: 0 6px 6px 0; }
-        .assistant-report-table tr:hover td { background: rgba(255,255,255,0.08); }
-        
-        /* 智能行动卡片 (New) */
-        .assistant-action-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid rgba(139, 92, 246, 0.15);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            flex: 1; /* Fill remaining height */
-        }
-        
-        .action-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .action-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #111827;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .pulse-dot {
-            width: 8px; height: 8px; background: #8b5cf6; border-radius: 50%;
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
-            animation: pulse-purple 2s infinite;
-        }
-        
-        @keyframes pulse-purple {
-            0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(139, 92, 246, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
-        }
-        
-        .action-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-        
-        .action-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 12px;
-            background: #f9fafb;
-            transition: 0.3s;
-            border: 1px solid transparent;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        
-        .action-item.visible {
-            animation: slideInAction 0.5s ease-out forwards;
-        }
-        
-        .action-item:hover {
-            background: #fff;
-            border-color: #e5e7eb;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transform: translateX(4px); /* Hover effect overrides transform, might conflict with animation fill mode? */
-        }
-        
-        /* Fix hover conflict: After animation, we want hover to work. 
-           The animation sets transform to translateY(0). 
-           Hover sets translateX(4px). 
-           We need to ensure they don't conflict. 
-           Better to apply hover effect on a wrapper or handle state.
-           Actually, if animation fills forwards, transform is set to translateY(0).
-           Hover transform: translateX(4px) will overwrite translateY(0). 
-           So it will jump from Y=0 to Y=unknown (default 0). 
-           It should be fine, but let's be careful. 
-        */
-
-        .action-item.visible:hover {
-             transform: translateX(4px) translateY(0);
-        }
-        
-        @keyframes slideInAction {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .action-icon-box {
-            width: 36px; height: 36px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-        .action-icon-box.blue { background: #eff6ff; color: #3b82f6; }
-        .action-icon-box.orange { background: #fff7ed; color: #f97316; }
-        
-        .action-content { flex: 1; }
-        .action-name { font-size: 0.85rem; font-weight: 600; color: #1f2937; margin-bottom: 2px; }
-        .action-detail { font-size: 0.75rem; color: #6b7280; }
-        
-        .action-btn {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
+        .assistant-report-title {
+            font-size: 0.8rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            border: none;
         }
-        .action-btn.primary { background: #111827; color: white; }
-        .action-btn.primary:hover { background: #374151; }
-        .action-btn.secondary { background: #e5e7eb; color: #374151; }
-        .action-btn.secondary:hover { background: #d1d5db; }
+        .assistant-report-date {
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+        .assistant-report-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.5rem;
+        }
+        .assistant-report-badge {
+            padding: 0.18rem 0.5rem;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.9);
+            border: 1px solid rgba(148,163,184,0.6);
+            font-size: 0.68rem;
+            color: #e5e7eb;
+        }
+        .assistant-report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.25rem;
+        }
+        .assistant-report-table th,
+        .assistant-report-table td {
+            padding: 0.25rem 0.15rem;
+            text-align: left;
+            font-size: 0.7rem;
+        }
+        .assistant-report-table th {
+            color: #9ca3af;
+            font-weight: 500;
+        }
+        .assistant-report-table tr:nth-child(odd) td {
+            background: rgba(15,23,42,0.88);
+        }
+        .assistant-report-table tr:nth-child(even) td {
+            background: rgba(15,23,42,0.96);
+        }
+        .assistant-report-tag-up {
+            color: #22c55e;
+        }
+        .assistant-report-tag-down {
+            color: #f97316;
+        }
 
         @media (max-width: 900px) {
             .assistant-layout {
                 grid-template-columns: 1fr;
             }
-            .assistant-chat-card { min-height: 400px; }
         }
-
 
         /* --- Pricing --- */
         .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 900px; margin: 3rem auto 0; }
@@ -1516,7 +1403,6 @@
 
     <!-- Section 3.5: Ozonglod 智能助手 -->
     <section class="section assistant-section">
-        <div class="assistant-bg-decoration"></div>
         <div class="container fade-up">
             <div class="assistant-header">
                 <div class="assistant-tag">
@@ -1525,7 +1411,7 @@
                 </div>
                 <h2 class="assistant-title">Ozonglod 智能助手</h2>
                 <p class="assistant-desc">
-                    基于跨境电商行业知识库与店铺实时数据，为你解答专业问题、分析运营风险，<br>
+                    基于跨境电商行业知识库与店铺实时数据，为你解答专业问题、分析运营风险，
                     并自动生成每日店铺报告与优化建议，让复杂判断变成简单对话。
                 </p>
             </div>
@@ -1539,7 +1425,7 @@
                             <div>
                                 <div class="assistant-name">Ozonglod 智能助手</div>
                                 <div class="assistant-status">
-                                    <span class="assistant-tag-dot" style="width:6px;height:6px;box-shadow:none;animation:none;"></span>
+                                    <span class="assistant-status-dot"></span>
                                     实时连接店铺数据
                                 </div>
                             </div>
@@ -1558,7 +1444,7 @@
                             <div class="assistant-bubble-label"><span></span>卖家</div>
                             那今天整体利润和昨天相比情况怎么样？
                         </div>
-                        <div class="assistant-bubble bot" data-delay="1400" data-text="截止当前15:20：GMV：¥ 48,320（较昨日同期 +12.4%） 广告花费：¥ 8,820（较昨日 +28.7%）· 预估净利率：↓ 3.2 pct。建议：控制高 CPL 词出价，并观察晚高峰前 2 小时的转化反馈。">
+                        <div class="assistant-bubble bot" data-delay="1400" data-text="截止当前15:20 GMV：¥ 48,320（较昨日同期 +12.4%） 广告花费：¥ 8,820（较昨日 +28.7%）· 预估净利率：↓ 3.2 pct。建议：控制高 CPL 词出价，并观察晚高峰前 2 小时的转化反馈。">
                             <div class="assistant-bubble-label"><span></span>助手 · 实时数据</div>
                         </div>
                         <div class="assistant-bubble user" data-delay="1900">
@@ -1575,106 +1461,73 @@
                     </div>
                 </div>
 
-                <!-- 右侧：数据与日报示意 -->
+                <!-- 右侧：店铺数据 & 日报示意 -->
                 <div class="assistant-metrics">
-                    <!-- 1. 指标卡片 -->
                     <div class="assistant-metric-row">
                         <div class="assistant-metric-card">
-                            <div class="assistant-metric-label">今日 GMV</div>
+                            <div class="assistant-metric-label">今日 GMV（Ozon 全店）</div>
                             <div class="assistant-metric-value">¥ 52,430<span class="assistant-metric-tag">+14.2%</span></div>
                         </div>
                         <div class="assistant-metric-card">
-                            <div class="assistant-metric-label">广告占比</div>
+                            <div class="assistant-metric-label">广告花费占比</div>
                             <div class="assistant-metric-value warn">18.3%<span class="assistant-metric-tag warn">略偏高</span></div>
                         </div>
                         <div class="assistant-metric-card">
-                            <div class="assistant-metric-label">预估净利</div>
-                            <div class="assistant-metric-value">21.7%<span class="assistant-metric-tag">健康</span></div>
+                            <div class="assistant-metric-label">预估净利率</div>
+                            <div class="assistant-metric-value">21.7%<span class="assistant-metric-tag">健康区间</span></div>
                         </div>
                     </div>
-
-                    <!-- 2. 日报卡片 -->
                     <div class="assistant-report-card">
-                        <div class="assistant-report-header">
-                            <div class="assistant-report-title">
-                                <svg class="assistant-report-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                每日店铺报告
+                        <div class="assistant-report-card-inner">
+                            <div class="assistant-report-header">
+                                <div class="assistant-report-title">每日店铺报告（示意）</div>
+                                <div class="assistant-report-date">2026-01-28 · Ozon RU</div>
                             </div>
-                            <div class="assistant-report-date">2026-01-28 · Ozon RU</div>
-                        </div>
-                        <div class="assistant-report-badges">
-                            <span class="assistant-report-badge">利润监测</span>
-                            <span class="assistant-report-badge">执行窗口: 18:00-22:00</span>
-                        </div>
-                        <table class="assistant-report-table">
-                            <thead>
-                                <tr>
-                                    <th>维度</th>
-                                    <th>今日数据</th>
-                                    <th>助手建议</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>店铺</td>
-                                    <td>GMV +14%</td>
-                                    <td>保持当前折扣策略</td>
-                                </tr>
-                                <tr>
-                                    <td>广告</td>
-                                    <td>ACOS 18%</td>
-                                    <td>下调 8 个高耗词出价</td>
-                                </tr>
-                                <tr>
-                                    <td>库存</td>
-                                    <td>周转 32天</td>
-                                    <td>畅销款增加安全库存</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- 3. 智能行动卡片 (New) -->
-                    <div class="assistant-action-card">
-                        <div class="action-header">
-                            <div class="action-title">
-                                <span class="pulse-dot"></span> 智能优化建议
+                            <div class="assistant-report-badges">
+                                <span class="assistant-report-badge">核心关注：利润稳定 &amp; 广告效率</span>
+                                <span class="assistant-report-badge">建议执行窗口：18:00 - 22:00</span>
                             </div>
-                            <div style="font-size: 0.75rem; color: #6b7280;">刚刚更新</div>
-                        </div>
-                        <div class="action-list">
-                            <div class="action-item">
-                                <div class="action-icon-box blue">🚀</div>
-                                <div class="action-content">
-                                    <div class="action-name">广告竞价优化</div>
-                                    <div class="action-detail">建议下调 "无线耳机" 关键词出价 -15%</div>
-                                </div>
-                                <button class="action-btn primary">一键执行</button>
-                            </div>
-                            <div class="action-item">
-                                <div class="action-icon-box orange">⚠️</div>
-                                <div class="action-content">
-                                    <div class="action-name">库存预警</div>
-                                    <div class="action-detail">SKU-8823 预计 3 天后断货</div>
-                                </div>
-                                <button class="action-btn secondary">查看方案</button>
-                            </div>
-                            <div class="action-item">
-                                <div class="action-icon-box blue">📈</div>
-                                <div class="action-content">
-                                    <div class="action-name">销量激增</div>
-                                    <div class="action-detail">SKU-1024 销量环比昨日 +150%</div>
-                                </div>
-                                <button class="action-btn primary">查看原因</button>
-                            </div>
-                            <div class="action-item">
-                                <div class="action-icon-box orange">💰</div>
-                                <div class="action-content">
-                                    <div class="action-name">利润率下降</div>
-                                    <div class="action-detail">今日整体毛利率低于警戒线 15%</div>
-                                </div>
-                                <button class="action-btn secondary">分析利润</button>
-                            </div>
+                            <table class="assistant-report-table">
+                                <thead>
+                                    <tr>
+                                        <th>维度</th>
+                                        <th>指标</th>
+                                        <th>今日</th>
+                                        <th>对比昨日</th>
+                                        <th>助手建议</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>店铺整体</td>
+                                        <td>GMV</td>
+                                        <td>¥ 52,430</td>
+                                        <td class="assistant-report-tag-up">+14.2%</td>
+                                        <td>保持当前折扣策略，观察流量来源结构</td>
+                                    </tr>
+                                    <tr>
+                                        <td>广告</td>
+                                        <td>ACOS</td>
+                                        <td>18.3%</td>
+                                        <td class="assistant-report-tag-down">+3.1pct</td>
+                                        <td>下调 8 个高花费低转化词出价 10%-15%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>商品</td>
+                                        <td>库存周转</td>
+                                        <td>32 天</td>
+                                        <td class="assistant-report-tag-up">-4 天</td>
+                                        <td>为畅销款增加 1.3 倍安全库存，避免断货</td>
+                                    </tr>
+                                    <tr>
+                                        <td>运营动作</td>
+                                        <td>待确认任务</td>
+                                        <td>5 条</td>
+                                        <td class="assistant-report-tag-down">+2 条</td>
+                                        <td>建议今晚前完成价格和广告两类调整确认</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -2370,26 +2223,6 @@
             }, { threshold: 0.2 });
 
             chatObserver.observe(assistantChat);
-        }
-
-        // 智能优化建议动画触发
-        const actionCard = document.querySelector('.assistant-action-card');
-        if (actionCard) {
-            const actionObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const items = entry.target.querySelectorAll('.action-item');
-                        items.forEach((item, index) => {
-                            // 依次设置延迟，让它们逐条弹出
-                            item.style.animationDelay = `${index * 0.8}s`; 
-                            item.classList.add('visible');
-                        });
-                        // 触发一次后即可停止观察
-                        actionObserver.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.2 });
-            actionObserver.observe(actionCard);
         }
     </script>
 </body>

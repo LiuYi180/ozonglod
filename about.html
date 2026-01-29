@@ -920,6 +920,21 @@
             .universe-grid { grid-template-columns: 1fr; gap: 3rem; }
             .vision-title { font-size: 2.5rem; }
             .core-card { max-width: 400px; margin: 0 auto; }
+            /* 平板及以下：轨道平台自适应宽度，避免横向溢出 */
+            .orbit-grid {
+                width: 100%;
+                margin-left: 0;
+                justify-content: center;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            /* 小屏手机：一列展示平台，保证可读性 */
+            .orbit-grid {
+                grid-template-columns: 1fr;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -1108,7 +1123,7 @@
                         <div class="halo-ring"></div>
                         <div class="halo-ring"></div>
                         <div class="halo-ring"></div>
-                        <img src="ecommerce_logos 2/ozon_logo.svg" alt="Ozon" class="core-logo-img">
+                        <img src="images/logos/ozon_logo.svg" alt="Ozon" class="core-logo-img">
                     </div>
                     <div class="core-status">
                         <span class="status-dot"></span>
@@ -1125,70 +1140,70 @@
                 <div class="orbit-grid fade-up" style="transition-delay: 0.1s;">
                     <!-- Mercado Libre -->
                     <div class="orbit-item latam">
-                        <img src="ecommerce_logos 2/美客多logo.png" alt="Mercado Libre">
+                        <img src="images/logos/美客多logo.png" alt="Mercado Libre">
                         <span class="orbit-name">Mercado Libre</span>
                         <span class="orbit-tag">LATAM</span>
                     </div>
 
                     <!-- Shopee -->
                     <div class="orbit-item sea">
-                        <img src="ecommerce_logos 2/shopee.svg" alt="Shopee">
+                        <img src="images/logos/shopee.svg" alt="Shopee">
                         <span class="orbit-name">Shopee</span>
                         <span class="orbit-tag">SEA</span>
                     </div>
 
                     <!-- eBay -->
                     <div class="orbit-item global">
-                        <img src="ecommerce_logos 2/ebay.svg" alt="eBay">
+                        <img src="images/logos/ebay.svg" alt="eBay">
                         <span class="orbit-name">eBay</span>
                         <span class="orbit-tag">GLOBAL</span>
                     </div>
 
                     <!-- Etsy -->
                     <div class="orbit-item niche">
-                        <img src="ecommerce_logos 2/etsy.svg" alt="Etsy">
+                        <img src="images/logos/etsy.svg" alt="Etsy">
                         <span class="orbit-name">Etsy</span>
                         <span class="orbit-tag">NICHE</span>
                     </div>
 
                     <!-- Rakuten -->
                     <div class="orbit-item global">
-                        <img src="ecommerce_logos 2/rakuten.svg" alt="Rakuten">
+                        <img src="images/logos/rakuten.svg" alt="Rakuten">
                         <span class="orbit-name">Rakuten</span>
                         <span class="orbit-tag">JAPAN</span>
                     </div>
 
                     <!-- Rakuten Kobo -->
                     <div class="orbit-item niche">
-                        <img src="ecommerce_logos 2/rakutenkobo.svg" alt="Rakuten Kobo">
+                        <img src="images/logos/rakutenkobo.svg" alt="Rakuten Kobo">
                         <span class="orbit-name">Kobo</span>
                         <span class="orbit-tag">CONTENT</span>
                     </div>
 
                     <!-- Blibli -->
                     <div class="orbit-item sea">
-                        <img src="ecommerce_logos 2/blibli.svg" alt="Blibli">
+                        <img src="images/logos/blibli.svg" alt="Blibli">
                         <span class="orbit-name">Blibli</span>
                         <span class="orbit-tag">INDONESIA</span>
                     </div>
 
                     <!-- Zalando -->
                     <div class="orbit-item global">
-                        <img src="ecommerce_logos 2/zalando.svg" alt="Zalando">
+                        <img src="images/logos/zalando.svg" alt="Zalando">
                         <span class="orbit-name">Zalando</span>
                         <span class="orbit-tag">FASHION</span>
                     </div>
 
                     <!-- Vinted -->
                     <div class="orbit-item niche">
-                        <img src="ecommerce_logos 2/vinted.svg" alt="Vinted">
+                        <img src="images/logos/vinted.svg" alt="Vinted">
                         <span class="orbit-name">Vinted</span>
                         <span class="orbit-tag">RESALE</span>
                     </div>
 
                     <!-- Wish -->
                     <div class="orbit-item global">
-                        <img src="ecommerce_logos 2/wish.svg" alt="Wish">
+                        <img src="images/logos/wish.svg" alt="Wish">
                         <span class="orbit-name">Wish</span>
                         <span class="orbit-tag">MOBILE</span>
                     </div>
